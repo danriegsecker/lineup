@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" currentState="notBusy" creationComplete="onCreationComplete();">
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.lineup.model.ModelLocator;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.events.PropertyChangeEvent;
+
+			[Bindable]
+			[Embed(source="assets/online.png")]
+			private var onlineIcon:Class;
+
+			[Bindable]
+			[Embed(source="assets/offline.png")]
+			private var offlineIcon:Class;
+			
+			[Bindable]
+            [Embed(source="assets/progressCircle.swf", symbol="progressCircle")]
+            private var progressCircle:Class;
+
+			private function onCreationComplete():void
+			{
+				ChangeWatcher.watch(ModelLocator.getInstance(), "busy", onBusyChange);
+			}
+
+			private function onBusyChange(e:PropertyChangeEvent):void
+			{
+				if (e.newValue == null) return;
+				this.currentState = (Boolean(e.newValue) == true) ? "busy" : "notBusy";
+			}
+
+		]]>
+	</mx:Script>
+
+    <mx:transitions>
+        <mx:Transition fromState="notBusy" toState="busy">
+            <mx:Sequence>
+				<mx:Move duration="250" targets="{[settingsButton]}"/>
+            </mx:Sequence>
+        </mx:Transition>
+        <mx:Transition fromState="busy" toState="notBusy">
+            <mx:Sequence>
+				<mx:Move duration="250" targets="{[settingsButton]}"/>
+            </mx:Sequence>
+        </mx:Transition>
+    </mx:transitions>
+	
+	<mx:states>
+		<mx:State name="notBusy">
+			<mx:AddChild>
+				<mx:ApplicationControlBar width="100%">
+					<mx:Button id="settingsButton" label="Server Settings" click="ModelLocator.getInstance().serverConfigOpen = true" enabled="{!ModelLocator.getInstance().serverConfigOpen}"/>
+					<mx:Spacer width="100%"/>
+					<mx:Image id="connectedIcon" source="{(ModelLocator.getInstance().online) ? onlineIcon: offlineIcon}"/>
+				</mx:ApplicationControlBar>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="busy" basedOn="notBusy">
+			<mx:AddChild relativeTo="{settingsButton}" position="before">
+				<mx:SWFLoader source="{progressCircle}" width="20" height="20" visible="{ModelLocator.getInstance().busy}"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+</mx:Canvas>

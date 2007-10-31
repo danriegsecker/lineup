@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:Panel
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:flexlib="http://code.google.com/p/flexlib/"
+	title="{formatCurrentDate(timeline.currentDate)}"
+	paddingBottom="4"
+	paddingRight="4"
+	layout="absolute"
+	creationPolicy="all"
+	creationComplete="onCreationComplete();">
+
+	<mx:Script>
+		<![CDATA[
+			import mx.core.UITextField;
+			import com.adobe.lineup.views.pages.AppointmentDetails;
+			import mx.events.PropertyChangeEvent;
+
+			import mx.events.ScrollEvent;
+			import mx.collections.ArrayCollection;
+			import mx.events.ScrollEventDirection;
+			import com.adobe.lineup.model.ModelLocator;
+			import mx.binding.utils.ChangeWatcher;
+			import com.adobe.lineup.vo.ScheduleEntry;
+			import mx.formatters.DateFormatter;
+
+			[Bindable] private var zoom:uint;
+			private var currentDateFormatter:DateFormatter;
+			private var nowTimer:Timer;
+
+			private function onCreationComplete():void
+			{
+				this.zoom = 800;
+				this.currentDateFormatter = new DateFormatter();
+				this.currentDateFormatter.formatString = "EEEE MMMM D, YYYY";
+				ChangeWatcher.watch(ModelLocator.getInstance(), "selectedAppointment", onAppointmentSelected);
+				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
+				this.nowTimer = new Timer(60 * 1000); // Every minute
+				this.nowTimer.addEventListener(TimerEvent.TIMER,
+					function(e:Event):void
+					{
+						if (isRightNowOnSchedule())
+						{
+							moveToNow();
+						}
+					});
+				this.nowTimer.start();
+			}
+
+			private function onTimezoneScroll(xPos:uint):void
+			{
+				scheduleViewer.xPosition = xPos;
+			}
+
+			private function onScrollScheduleViewer(event:ScrollEvent):void
+			{
+				if(event.direction == ScrollEventDirection.HORIZONTAL)
+				{
+				   timeline.xPosition = event.position;
+				}
+			}
+
+			private function onAppointmentSelected(e:PropertyChangeEvent):void
+			{
+				if (e.newValue == null) return;
+				scheduleViewer.moveToEntry(e.newValue as ScheduleEntry);
+			}
+
+			private function onAppointmentsUpdated(e:PropertyChangeEvent):void
+			{
+				var ml:ModelLocator = ModelLocator.getInstance();
+				if (this.isRightNowOnSchedule())
+				{
+					this.moveToNow();
+				}
+				else if (ml.appointments != null && ml.appointments.length > 0)
+				{
+					ml.selectedAppointment = ml.appointments.getItemAt(0) as ScheduleEntry;
+				}
+			}
+
+			private function formatCurrentDate(d:Date):String
+			{
+				return this.currentDateFormatter.format(d);
+			}
+			
+			private function onAppointmentClicked(e:MouseEvent):void
+			{
+				var entry:ScheduleEntry = (e.target is UITextField) ? e.target.document.data as ScheduleEntry : e.target.data as ScheduleEntry;
+				if (entry == null) return;
+				var details:AppointmentDetails = new AppointmentDetails();
+				details.entry = entry;
+				details.open(true);
+			}
+
+			private function moveToNow():void
+			{
+				this.scheduleViewer.moveToTime(new Date().getTime() - ModelLocator.getInstance().calStartDate.time);
+			}
+
+			private function isRightNowOnSchedule(d:Date = null, d2:Date = null):Boolean
+			{
+				var ml:ModelLocator = ModelLocator.getInstance();
+				if (ml.calStartDate == null || ml.calEndDate == null)
+				{
+					return false;
+				}
+				var time:Number = new Date().time;
+				if (ml.calStartDate.time <= time && ml.calEndDate.time >= time)
+				{
+					return true;
+				}
+				return false;
+			}
+			
+			private function onStayOnNowChange():void
+			{
+				if (stayOnNow.selected)
+				{
+					this.moveToNow();
+					this.nowTimer.start();
+				}
+				else
+				{
+					this.nowTimer.stop();
+				}
+			}
+
+		]]>
+
+	</mx:Script>
+
+	<mx:VBox width="100%" height="100%">
+		
+		<flexlib:Timeline
+			id="timeline" 
+			width="100%"
+			borderStyle="none"  
+			startDate="{ ModelLocator.getInstance().calStartDate }"
+			endDate="{ ModelLocator.getInstance().calEndDate }" 
+			zoom="{ zoom }"
+			scroll="onTimezoneScroll(event.position);" 
+			/>
+	
+		<flexlib:ScheduleViewer 
+			id="scheduleViewer" 
+			width="100%"
+			height="100%"
+			borderStyle="none"
+			dataProvider="{ ModelLocator.getInstance().appointments }"    
+			startDate="{ ModelLocator.getInstance().calStartDate }"
+			endDate="{ ModelLocator.getInstance().calEndDate }" 
+			zoom="{ zoom }"
+			selectedItem="{ ModelLocator.getInstance().selectedAppointment }"
+			horizontalScrollPolicy="off"
+			pixelScrollEnabled="true" 
+			pixelScroll="onScrollScheduleViewer(event);"
+			doubleClickEnabled="true" 
+			doubleClick="onAppointmentClicked(event);"
+			/>
+	
+		</mx:VBox>
+
+	<mx:HBox right="5" left="5" bottom="5">
+		<mx:Label text="Zoom:"/>
+		<mx:HSlider 
+			id="zoomSlider"
+			minimum="10"
+			maximum="1000"
+			value=" {zoom} " 
+			snapInterval="1"
+			liveDragging="true"
+			change="zoom = zoomSlider.value"
+			/>
+		<mx:Spacer width="100%"/>
+		<mx:CheckBox
+			id="stayOnNow"
+			label="Always show current time"
+			labelPlacement="right"
+			change="onStayOnNowChange();"
+			selected="true"
+			enabled="{isRightNowOnSchedule(ModelLocator.getInstance().calStartDate, ModelLocator.getInstance().calEndDate)}"/>
+	</mx:HBox>
+
+</mx:Panel>
+

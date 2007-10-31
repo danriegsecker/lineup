@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<application xmlns="http://ns.adobe.com/air/application/1.0.M5" appId="com.adobe.lineup" version="1.0 Beta">
+
+	<name>Lineup</name>
+	<title>Lineup</title>
+	<description>A cross-platform Exchange calendaring application. Written by Christian Cantrell and Prabhakar Shenoy.</description>
+	<copyright></copyright>
+	
+	<initialWindow>
+		<title>Lineup</title>
+		<content>!ApolloApplicationWizardPage.rootContentValue!</content>
+		<systemChrome>standard</systemChrome>
+		<transparent>false</transparent>
+		<visible>true</visible>
+		<minimizable>true</minimizable>
+		<maximizable>true</maximizable>
+		<resizable>true</resizable>
+		<width>1000</width>
+		<height>600</height>
+		<minSize>800 600</minSize>
+	</initialWindow>
+	  
+	<!-- <installFolder></installFolder> -->
+	<!-- <programMenuFolder>Example Company/Example Application</programMenuFolder> -->
+	    
+	<icon>
+		<!-- <image16x16>icons/AIRApp_16.png</image16x16> -->      
+		<!-- <image32x32>icons/AIRApp_32.png</image32x32> -->      
+		<!-- <image48x48>icons/AIRApp_48.png</image48x48> -->      
+		<image128x128>assets/application.png</image128x128>
+	</icon>
+
+</application>

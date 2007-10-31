@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication
+	layout="absolute" showStatusBar="false"
+	creationComplete="onCreationComplete();"
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	xmlns:pages="com.adobe.lineup.views.pages.*"
+	xmlns:comps="com.adobe.lineup.views.components.*">
+
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.lineup.events.ActivateEvent;
+			import com.adobe.lineup.events.ShutdownEvent;
+			import com.adobe.lineup.events.NotificationCheckEvent;
+			import com.adobe.lineup.events.InitEvent;
+		
+			import com.adobe.lineup.controller.Controller;
+			import com.adobe.lineup.events.GetAppointmentsEvent;
+			import com.adobe.lineup.model.ModelLocator;
+			
+			private var controller:Controller;
+			private var notificationTimer:Timer;
+			private var appointmentUpdateTimer:Timer;
+			
+			private function onCreationComplete():void
+			{
+				this.controller = new Controller();
+
+				// Set up the notification timer
+				this.notificationTimer = new Timer(60 * 1000); // Every minute
+				this.notificationTimer.addEventListener(TimerEvent.TIMER,
+					function(e:TimerEvent):void
+					{
+						new NotificationCheckEvent().dispatch();
+					});
+				this.notificationTimer.start();
+
+				// Set up the appointment refresh timer
+				this.appointmentUpdateTimer = new Timer(5 * 60 * 1000); // Every five minutes
+				this.appointmentUpdateTimer.addEventListener(TimerEvent.TIMER,
+					function(e:TimerEvent):void
+					{
+						var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
+						gae.startDate = new Date();
+						gae.endDate = new Date(gae.startDate.time + (60 * 60 * 24 * 7 * 1000)); // One week
+						gae.updateUI = false;
+						gae.dispatch();
+					});
+				this.appointmentUpdateTimer.start();
+
+				Shell.shell.addEventListener(Event.ACTIVATE,
+					function(e:Event):void
+					{
+						new ActivateEvent().dispatch();
+					});
+				
+				Shell.shell.addEventListener(Event.EXITING,
+					function(e:Event):void
+					{
+						new ShutdownEvent().dispatch();
+					});
+				
+				new InitEvent().dispatch();
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox width="100%" height="100%" horizontalAlign="center">
+	
+		<comps:ControlBar width="100%"/>
+
+		<pages:ViewSchedule label="View Schedule" width="100%" height="100%"/>
+
+		<!--		
+		<mx:TabNavigator id="mainTabs" width="100%" height="100%" creationPolicy="all">
+	
+			<pages:ViewSchedule label="View Schedule" width="100%" height="100%"/>
+	
+			<pages:MeetingInvites label="Meeting Invites" width="100%" height="100%"/>
+			
+			<pages:CreateAppointment label="Create Appointment" width="100%" height="100%"/>
+	
+		</mx:TabNavigator>
+		-->
+
+	</mx:VBox>
+
+	<pages:ServerInfoDrawer id="serverConfig" width="400" height="150"/>
+
+</mx:WindowedApplication>
