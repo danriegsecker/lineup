@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Window
+	xmlns:mx="http://www.adobe.com/2006/mxml"
+	layout="absolute"
+	width="400"
+	height="400"
+	type="utility"
+	creationComplete="onCreationComplete();">
+	
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.lineup.vo.ScheduleEntry;
+			import mx.formatters.DateFormatter;
+			
+			[Bindable] private var _entry:ScheduleEntry;
+			private var dateFormatter:DateFormatter;
+						
+			public function set entry(entry:ScheduleEntry):void
+			{
+				this._entry = entry;
+
+				this.dateFormatter = new DateFormatter();
+				this.dateFormatter.formatString = (this._entry.allDay) ? "EEEE MMMM D" : "EEEE MMMM D at L:NN A";
+
+				this.title = this._entry.subject;
+			}
+			
+			private function onCreationComplete():void
+			{
+				this.startDate.text = this.dateFormatter.format(this._entry.startDate);
+				this.endDate.text = this.dateFormatter.format(this._entry.endDate);
+				if (this._entry.allDay)
+				{
+					this.endDate.text += " (all day)";
+				}
+				this.location.text = (this._entry.location != null) ? this._entry.location : "(none)";
+				this.htmlDescription.htmlText = (this._entry.htmlDescription != null) ? this._entry.htmlDescription : "<p>(none)</p>";
+				this.textDescription.text = (this._entry.textDescription != null) ? this._entry.textDescription : "(none)";
+			}
+		]]>
+	</mx:Script>
+
+	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+
+		<mx:Canvas width="100%">
+	
+			<mx:constraintColumns>
+				<mx:ConstraintColumn width="40%" id="col_1"/>
+				<mx:ConstraintColumn width="60%" id="col_2"/>
+			</mx:constraintColumns>
+			
+			<mx:constraintRows>
+				<mx:ConstraintRow id="row_1"/>
+				<mx:ConstraintRow id="row_2"/>
+				<mx:ConstraintRow id="row_3"/>
+			</mx:constraintRows>
+			
+			<mx:Label id="startDateLabel" right="col_1:10" top="row_1:0" text="Start Date:" fontWeight="bold"/>
+			<mx:Label id="startDate"      left="col_2:10"  top="row_1:0"/>
+		
+			<mx:Label id="endDateLabel" right="col_1:10" top="row_2:0" text="End Date:" fontWeight="bold"/>
+			<mx:Label id="endDate"      left="col_2:10"  top="row_2:0"/>
+		
+			<mx:Label id="locationLabel" right="col_1:10" top="row_3:0" text="Location:" fontWeight="bold"/>
+			<mx:Label id="location"      left="col_2:10"  top="row_3:0"/>
+	
+		</mx:Canvas>
+
+		<mx:TabNavigator width="100%" height="100%" creationPolicy="all" horizontalAlign="center" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+			<mx:Canvas width="100%" height="100%" label="HTML Description">
+				<mx:HTML width="100%" height="100%" id="htmlDescription"/>
+			</mx:Canvas>
+			<mx:Canvas width="100%" height="100%" label="Text Description">
+				<mx:TextArea width="100%" height="100%" id="textDescription"/>
+			</mx:Canvas>
+		</mx:TabNavigator>
+
+	</mx:VBox>
+
+</mx:Window>
