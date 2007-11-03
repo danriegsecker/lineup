@@ -98,13 +98,12 @@ package com.adobe.lineup.commands
 				a.htmlDescription = row.html_description;
 				a.allDay = row.all_day_event;
 				a.location = row.location;
+				a.url = row.url;
 				var entry:ScheduleEntry = new ScheduleEntry(a);
 	            newAppointments.addItem(entry);
 			}
 			newAppointments.source.sortOn("startDate", Array.NUMERIC);
 			ml.appointments = newAppointments;
-			// TBD: remove
-			//ml.selectedAppointment = ml.appointments.getItemAt(0) as ScheduleEntry;
 			this.refreshIconMenu();
 		}
 		
