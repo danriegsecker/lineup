@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<renderers:AbstractGradientScheduleEntryRenderer 
+    xmlns:mx="http://www.adobe.com/2006/mxml" 
+    xmlns:renderers="flexlib.scheduling.scheduleClasses.renderers.*"
+    creationComplete="onCreationComplete();">
+
+    <mx:Script>
+        <![CDATA[
+        	import com.adobe.lineup.views.pages.HTMLBrowser;
+        	import com.adobe.lineup.vo.ScheduleEntry;
+            import flexlib.scheduling.scheduleClasses.IScheduleEntry;
+            import flexlib.scheduling.scheduleClasses.SimpleScheduleEntry;
+            import com.adobe.lineup.views.pages.AppointmentDetails;
+            import mx.events.FlexEvent;
+            
+            public function onCreationComplete():void
+            {
+				var cm:ContextMenu = new ContextMenu();
+				var viewDetailsMI:ContextMenuItem = new ContextMenuItem("View Details");
+				viewDetailsMI.addEventListener(Event.SELECT,
+					function(e:Event):void
+					{
+						var details:AppointmentDetails = new AppointmentDetails();
+						details.entry = entry as ScheduleEntry;
+						details.open(true);
+					});
+				var openMI:ContextMenuItem = new ContextMenuItem("Open in OWA");
+				openMI.enabled = (ScheduleEntry(entry).url == null) ? false : true;
+				openMI.addEventListener(Event.SELECT,
+					function(e:Event):void
+					{
+						var browser:HTMLBrowser = new HTMLBrowser();
+						browser.addEventListener(FlexEvent.CREATION_COMPLETE,
+							function(e:Event):void
+							{
+								browser.html.location = ScheduleEntry(entry).url;
+							});
+						browser.open(true);
+					});
+
+				cm.customItems.push(viewDetailsMI);
+				cm.customItems.push(openMI);
+				this.contextMenu = cm;
+            }
+            
+            override public function set data ( value : Object ) : void
+            {
+                super.data = value;
+                this.entry = value as IScheduleEntry;
+                var content : SimpleScheduleEntry = SimpleScheduleEntry( entry );
+                setTextContent( content );
+            }
+            
+        ]]>
+    </mx:Script>
+
+    <mx:Label id="contentLabel"/>
+    <mx:Text id="contentText" selectable="false"/>
+
+</renderers:AbstractGradientScheduleEntryRenderer>
