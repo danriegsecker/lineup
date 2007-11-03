@@ -5,6 +5,8 @@
 			import com.adobe.lineup.model.ModelLocator;
 			import mx.binding.utils.ChangeWatcher;
 			import mx.events.PropertyChangeEvent;
+			import com.adobe.lineup.views.pages.HTMLBrowser;
+			import mx.events.FlexEvent;
 
 			[Bindable]
 			[Embed(source="assets/online.png")]
@@ -29,18 +31,29 @@
 				this.currentState = (Boolean(e.newValue) == true) ? "busy" : "notBusy";
 			}
 
+			private function onOpenOWA():void
+			{
+				var browser:HTMLBrowser = new HTMLBrowser();
+				browser.addEventListener(FlexEvent.CREATION_COMPLETE,
+					function(e:Event):void
+					{
+						browser.html.location = "http://" + ModelLocator.getInstance().serverInfo.exchangeServer;
+					});
+				browser.open(true);
+			}
+
 		]]>
 	</mx:Script>
 
     <mx:transitions>
         <mx:Transition fromState="notBusy" toState="busy">
             <mx:Sequence>
-				<mx:Move duration="250" targets="{[settingsButton]}"/>
+				<mx:Move duration="250" targets="{[settingsButton, owaButton]}"/>
             </mx:Sequence>
         </mx:Transition>
         <mx:Transition fromState="busy" toState="notBusy">
             <mx:Sequence>
-				<mx:Move duration="250" targets="{[settingsButton]}"/>
+				<mx:Move duration="250" targets="{[settingsButton, owaButton]}"/>
             </mx:Sequence>
         </mx:Transition>
     </mx:transitions>
@@ -50,6 +63,7 @@
 			<mx:AddChild>
 				<mx:ApplicationControlBar width="100%">
 					<mx:Button id="settingsButton" label="Server Settings" click="ModelLocator.getInstance().serverConfigOpen = true" enabled="{!ModelLocator.getInstance().serverConfigOpen}"/>
+					<mx:Button id="owaButton" label="Open OWA" click="onOpenOWA();"/>
 					<mx:Spacer width="100%"/>
 					<mx:Image id="connectedIcon" source="{(ModelLocator.getInstance().online) ? onlineIcon: offlineIcon}"/>
 				</mx:ApplicationControlBar>
