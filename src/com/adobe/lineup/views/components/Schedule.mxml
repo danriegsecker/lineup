@@ -29,12 +29,12 @@
 			private var nowTimer:Timer;
 
 			private function onCreationComplete():void
-			{
+			{				
 				this.zoom = 800;
 				this.currentDateFormatter = new DateFormatter();
 				this.currentDateFormatter.formatString = "EEEE MMMM D, YYYY";
 				ChangeWatcher.watch(ModelLocator.getInstance(), "selectedAppointment", onAppointmentSelected);
-				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
+				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);				
 				this.nowTimer = new Timer(60 * 1000); // Every minute
 				this.nowTimer.addEventListener(TimerEvent.TIMER,
 					function(e:Event):void
@@ -143,7 +143,7 @@
 			/>
 	
 		<flexlib:ScheduleViewer 
-			id="scheduleViewer" 
+			id="scheduleViewer"
 			width="100%"
 			height="100%"
 			borderStyle="none"
@@ -157,8 +157,8 @@
 			pixelScroll="onScrollScheduleViewer(event);"
 			doubleClickEnabled="true" 
 			doubleClick="onAppointmentClicked(event);"
-			/>
-	
+			entryRenderer="com.adobe.lineup.views.components.ScheduleEntryRenderer"/>
+			
 		</mx:VBox>
 
 	<mx:HBox right="5" left="5" bottom="5">
