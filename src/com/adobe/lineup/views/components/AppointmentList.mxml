@@ -15,18 +15,14 @@
 			import mx.events.CollectionEvent;
 			import mx.formatters.DateFormatter;
 			import mx.collections.ArrayCollection;
-			
-			private function onItemClick():void
-			{
-				
-			}
 
 			private var dateFormatter:DateFormatter;
+
 			private function onCreationComplete(): void
 			{
 				dateFormatter = new DateFormatter();
-				dateFormatter.formatString = "EEEE, MMM D"; // ", YYYY";
-//				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
+				dateFormatter.formatString = "EEEE (MM/D)"; // ", YYYY";
+				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
 			}
 
 			private function selectAppt(event:Event): void
@@ -53,6 +49,7 @@
  			}
 
 			[Bindable] private var appointments: XML = new XML('<apts id="Appointments"></apts>');
+
 			private function populateTree(ar: Array): void
 			{
 				appointments = new XML('<apts id="Appointments"></apts>');
@@ -83,31 +80,21 @@
 
 			private function onAppointmentsUpdated(e:PropertyChangeEvent):void
 			{
-				trace(e.target);
-				if (e.target != null)
+				if (e.newValue != null)
 				{
-					this.populateTree((e.target as ArrayCollection).source);
+					this.populateTree((e.newValue as ArrayCollection).source);
 				}
 			}
 
 		]]>
 	</mx:Script>
-<!--
-	<mx:List
-		id="upcomingAppointments"
-		width="100%" height="100%"
-		dataProvider="{ModelLocator.getInstance().appointments}"
-		itemClick="ModelLocator.getInstance().selectedAppointment = upcomingAppointments.selectedItem as ScheduleEntry"/>
-
--->
-	<mx:ArrayCollection 
-		id="apts" 
-		source="{ModelLocator.getInstance().appointments.source}" 
-		collectionChange="this.populateTree(apts.source)"/>
 
 	<mx:Tree 
 		id="upcomingAppointments"
-		width="100%" height="100%" labelField="@id"
-		dataProvider="{appointments}" showRoot="false"
+		width="100%" height="100%"
+		labelField="@id"
+		dataProvider="{appointments}"
+		showRoot="false"
 		change="selectAppt(event)"/>
+
 </mx:Panel>
