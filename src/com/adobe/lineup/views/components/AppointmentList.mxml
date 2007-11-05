@@ -3,25 +3,111 @@
 <mx:Panel
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	layout="vertical" title="Upcoming Appointments"
-	creationPolicy="all">
+	creationPolicy="all" creationComplete="onCreationComplete()">
 
 	<mx:Script>
 		<![CDATA[
+			import mx.events.CollectionEventKind;
 			import com.adobe.lineup.vo.ScheduleEntry;
 			import com.adobe.lineup.model.ModelLocator;
+			import mx.binding.utils.ChangeWatcher;
+			import mx.events.PropertyChangeEvent;
+			import mx.events.CollectionEvent;
+			import mx.formatters.DateFormatter;
+			import mx.collections.ArrayCollection;
 			
 			private function onItemClick():void
 			{
 				
 			}
-			
+
+			private var dateFormatter:DateFormatter;
+			private function onCreationComplete(): void
+			{
+				dateFormatter = new DateFormatter();
+				dateFormatter.formatString = "EEEE, MMM D"; // ", YYYY";
+//				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
+			}
+
+			private function selectAppt(event:Event): void
+			{
+            	var selectedNode: XML = Tree(event.target).selectedItem as XML;
+				for (var i: uint = 0; i < selectedNode.length(); i++)
+				{
+					if (selectedNode.attribute("startDate") != undefined)
+					{
+						for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
+						{
+							var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+							if (se.label == selectedNode.attribute("id") && 
+							    se.startDate.toString() == selectedNode.attribute("startDate") &&
+							    se.endDate.toString() == selectedNode.attribute("endDate"))
+							{
+								ModelLocator.getInstance().selectedAppointment = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+								break;
+							}
+						}
+						break;
+					}
+				}
+ 			}
+
+			[Bindable] private var appointments: XML = new XML('<apts id="Appointments"></apts>');
+			private function populateTree(ar: Array): void
+			{
+				appointments = new XML('<apts id="Appointments"></apts>');
+				if (ar.length > 0)
+				{
+					var dt: Date = (ar[0] as ScheduleEntry).startDate;
+					dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+					var dtXML: XML = new XML();
+					dtXML = <date id={dateFormatter.format(dt)}/>
+					for (var i:int = 0; i < ar.length; i++)
+					{
+						var entry: ScheduleEntry = ar[i] as ScheduleEntry;
+						var d1: Date = new Date(entry.startDate.getFullYear(), entry.startDate.getMonth(), entry.startDate.getDate());
+						if (d1.toString() != dt.toString())
+						{
+							appointments = appointments.appendChild(dtXML);
+							dt = d1;
+							dtXML = <date id={dateFormatter.format(dt)}/>
+						}
+						var apt: XML = new XML();
+						apt = <appointment id={entry.label} data={entry.subject} startDate={entry.startDate} endDate={entry.endDate}/>
+						dtXML = dtXML.appendChild(apt);
+					}
+					appointments = appointments.appendChild(dtXML);
+				}
+
+			}
+
+			private function onAppointmentsUpdated(e:PropertyChangeEvent):void
+			{
+				trace(e.target);
+				if (e.target != null)
+				{
+					this.populateTree((e.target as ArrayCollection).source);
+				}
+			}
+
 		]]>
 	</mx:Script>
-
+<!--
 	<mx:List
 		id="upcomingAppointments"
 		width="100%" height="100%"
 		dataProvider="{ModelLocator.getInstance().appointments}"
 		itemClick="ModelLocator.getInstance().selectedAppointment = upcomingAppointments.selectedItem as ScheduleEntry"/>
 
+-->
+	<mx:ArrayCollection 
+		id="apts" 
+		source="{ModelLocator.getInstance().appointments.source}" 
+		collectionChange="this.populateTree(apts.source)"/>
+
+	<mx:Tree 
+		id="upcomingAppointments"
+		width="100%" height="100%" labelField="@id"
+		dataProvider="{appointments}" showRoot="false"
+		change="selectAppt(event)"/>
 </mx:Panel>
