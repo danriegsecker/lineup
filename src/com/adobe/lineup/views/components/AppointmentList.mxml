@@ -21,7 +21,7 @@
 			private function onCreationComplete(): void
 			{
 				dateFormatter = new DateFormatter();
-				dateFormatter.formatString = "EEEE (MM/D)"; // ", YYYY";
+				dateFormatter.formatString = "EEEE (M/D)"; // ", YYYY";
 				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
 			}
 
