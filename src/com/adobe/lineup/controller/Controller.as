@@ -16,6 +16,7 @@ package com.adobe.lineup.controller
 		private function addCommands():void
 		{
 			this.addCommand(InitEvent.INIT_EVENT, InitCommand);
+			this.addCommand(InvocationEvent.INVOCATION_EVENT, InvocationCommand);
 			this.addCommand(ActivateEvent.ACTIVATE_EVENT, ActivateCommand);
 			this.addCommand(ShutdownEvent.SHUTDOWN_EVENT, ShutdownCommand);
 			this.addCommand(GetAppointmentsEvent.GET_APPOINTMENTS_EVENT, GetAppointmentsCommand);
