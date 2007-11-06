@@ -12,6 +12,7 @@
 			import com.adobe.lineup.events.ShutdownEvent;
 			import com.adobe.lineup.events.NotificationCheckEvent;
 			import com.adobe.lineup.events.InitEvent;
+			import com.adobe.lineup.events.InvocationEvent;
 		
 			import com.adobe.lineup.controller.Controller;
 			import com.adobe.lineup.events.GetAppointmentsEvent;
@@ -46,6 +47,12 @@
 						gae.dispatch();
 					});
 				this.appointmentUpdateTimer.start();
+
+				Shell.shell.addEventListener(InvokeEvent.INVOKE,
+					function(e:InvokeEvent):void
+					{
+						new InvocationEvent().dispatch();
+					});
 
 				Shell.shell.addEventListener(Event.ACTIVATE,
 					function(e:Event):void
