@@ -70,18 +70,6 @@
 
 		<pages:ViewSchedule label="View Schedule" width="100%" height="100%"/>
 
-		<!--		
-		<mx:TabNavigator id="mainTabs" width="100%" height="100%" creationPolicy="all">
-	
-			<pages:ViewSchedule label="View Schedule" width="100%" height="100%"/>
-	
-			<pages:MeetingInvites label="Meeting Invites" width="100%" height="100%"/>
-			
-			<pages:CreateAppointment label="Create Appointment" width="100%" height="100%"/>
-	
-		</mx:TabNavigator>
-		-->
-
 	</mx:VBox>
 
 	<pages:ServerInfoDrawer id="serverConfig" width="400" height="150"/>
