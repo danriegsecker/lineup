@@ -63,6 +63,8 @@
 			private function onAppointmentSelected(e:PropertyChangeEvent):void
 			{
 				if (e.newValue == null) return;
+				this.nowTimer.reset();
+				this.nowTimer.start();
 				scheduleViewer.moveToEntry(e.newValue as ScheduleEntry);
 			}
 
