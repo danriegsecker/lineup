@@ -35,6 +35,15 @@
 				gae.dispatch();
 			}
 
+			public function getThisWeekSchedule():void
+			{
+				var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
+				gae.startDate = new Date();
+				gae.endDate = new Date(gae.startDate.time + (60 * 60 * 24 * 7 * 1000)); // One week
+				gae.updateUI = true;
+				gae.dispatch();
+			}
+
 		]]>
 	</mx:Script>
 	
@@ -44,9 +53,6 @@
 		allowMultipleSelection="true"
 		selectedRanges="{[{'rangeStart':ModelLocator.getInstance().calStartDate,'rangeEnd':ModelLocator.getInstance().calEndDate}]}"/>
 
-	<mx:HBox>
-		<mx:Button label="Get Schedule" click="onGetSchedule();"/>
-		<mx:Button label="Today" click="getTodaysSchedule();"/>
-	</mx:HBox>
+	<mx:Button label="Get Schedule" width="100%" click="onGetSchedule();"/>
 
 </mx:Panel>
