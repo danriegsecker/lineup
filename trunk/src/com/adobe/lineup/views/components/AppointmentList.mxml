@@ -17,11 +17,16 @@
 			import mx.collections.ArrayCollection;
 
 			private var dateFormatter:DateFormatter;
+			private var entryDateFormatter:DateFormatter;
 
 			private function onCreationComplete(): void
 			{
 				dateFormatter = new DateFormatter();
-				dateFormatter.formatString = "EEEE (M/D)"; // ", YYYY";
+				dateFormatter.formatString = "EEEE MMMM D, YYYY";
+
+				entryDateFormatter = new DateFormatter();
+				entryDateFormatter.formatString = "L:NN";
+				
 				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
 			}
 
@@ -35,7 +40,7 @@
 						for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
 						{
 							var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-							if (se.label == selectedNode.attribute("id") && 
+							if (se.label == selectedNode.attribute("data") && 
 							    se.startDate.toString() == selectedNode.attribute("startDate") &&
 							    se.endDate.toString() == selectedNode.attribute("endDate"))
 							{
@@ -70,7 +75,7 @@
 							dtXML = <date id={dateFormatter.format(dt)}/>
 						}
 						var apt: XML = new XML();
-						apt = <appointment id={entry.label} data={entry.subject} startDate={entry.startDate} endDate={entry.endDate}/>
+						apt = <appointment id={entryDateFormatter.format(entry.startDate) + ' - ' + entry.label} data={entry.subject} startDate={entry.startDate} endDate={entry.endDate}/>
 						dtXML = dtXML.appendChild(apt);
 					}
 					appointments = appointments.appendChild(dtXML);
