@@ -33,22 +33,18 @@
 			private function selectAppt(event:Event): void
 			{
             	var selectedNode: XML = Tree(event.target).selectedItem as XML;
-				for (var i: uint = 0; i < selectedNode.length(); i++)
+				if (selectedNode.attribute("startDate") != undefined)
 				{
-					if (selectedNode.attribute("startDate") != undefined)
+					for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
 					{
-						for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
+						var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+						if (se.subject == selectedNode.attribute("data") && 
+						    se.startDate.toString() == selectedNode.attribute("startDate") &&
+						    se.endDate.toString() == selectedNode.attribute("endDate"))
 						{
-							var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-							if (se.label == selectedNode.attribute("data") && 
-							    se.startDate.toString() == selectedNode.attribute("startDate") &&
-							    se.endDate.toString() == selectedNode.attribute("endDate"))
-							{
-								ModelLocator.getInstance().selectedAppointment = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-								break;
-							}
+							ModelLocator.getInstance().selectedAppointment = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+							break;
 						}
-						break;
 					}
 				}
  			}
@@ -64,7 +60,7 @@
 					dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
 					var dtXML: XML = new XML();
 					dtXML = <date id={dateFormatter.format(dt)}/>
-					for (var i:int = 0; i < ar.length; i++)
+					for (var i:uint = 0; i < ar.length; i++)
 					{
 						var entry: ScheduleEntry = ar[i] as ScheduleEntry;
 						var d1: Date = new Date(entry.startDate.getFullYear(), entry.startDate.getMonth(), entry.startDate.getDate());
@@ -97,6 +93,7 @@
 	<mx:Tree 
 		id="upcomingAppointments"
 		width="100%" height="100%"
+		itemRenderer="com.adobe.lineup.views.components.CurrApptRenderer"
 		labelField="@id"
 		dataProvider="{appointments}"
 		showRoot="false"
