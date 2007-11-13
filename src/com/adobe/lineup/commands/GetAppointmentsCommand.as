@@ -11,6 +11,7 @@ package com.adobe.lineup.commands
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
 	import com.adobe.exchange.events.ExchangeErrorEvent;
+	import com.adobe.lineup.events.GetCurrentAppointmentEvent;
 	import com.adobe.utils.DateUtil;
 	
 	import flash.display.NativeMenu;
@@ -104,6 +105,7 @@ package com.adobe.lineup.commands
 			}
 			newAppointments.source.sortOn("startDate", Array.NUMERIC);
 			ml.appointments = newAppointments;
+			new GetCurrentAppointmentEvent().dispatch();			
 			this.refreshIconMenu();
 		}
 		

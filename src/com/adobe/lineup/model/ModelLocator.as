@@ -25,6 +25,7 @@ package com.adobe.lineup.model
 		[Bindable] public var serverConfigOpen:Boolean;
 		[Bindable] public var online:Boolean;
 		[Bindable] public var selectedAppointment:ScheduleEntry;
+		[Bindable] public var currentAppointment:ScheduleEntry;
 		[Bindable] public var busy:Boolean;
 
 		[Embed(source="assets/application.png")]
