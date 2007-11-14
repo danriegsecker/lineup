@@ -15,6 +15,8 @@
 			import mx.events.CollectionEvent;
 			import mx.formatters.DateFormatter;
 			import mx.collections.ArrayCollection;
+			import com.adobe.lineup.views.pages.AppointmentDetails;
+			import mx.controls.treeClasses.*;
 
 			private var dateFormatter:DateFormatter;
 			private var entryDateFormatter:DateFormatter;
@@ -87,6 +89,35 @@
 				}
 			}
 
+			
+			private function openEntry(event: Event): void
+			{
+				if (event.target != null && event.target.parent != null && event.target.parent is TreeItemRenderer)
+				{
+					var _oTreeListData:TreeListData = TreeListData((event.target.parent as TreeItemRenderer).listData);
+					if (_oTreeListData != null)
+					{
+						var selectedNode: XML = _oTreeListData.item as XML;
+						if (selectedNode.attribute("startDate") != undefined)
+						{
+							for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
+							{
+								var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+								if (se.subject == selectedNode.attribute("data") && 
+								    se.startDate.toString() == selectedNode.attribute("startDate") &&
+								    se.endDate.toString() == selectedNode.attribute("endDate"))
+								{
+									var details:AppointmentDetails = new AppointmentDetails();
+									details.entry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
+									details.open(true);
+									break;
+								}
+							}
+						}
+					}
+				}
+			}
+
 		]]>
 	</mx:Script>
 
@@ -97,6 +128,8 @@
 		labelField="@id"
 		dataProvider="{appointments}"
 		showRoot="false"
-		change="selectAppt(event)"/>
+		change="selectAppt(event)"
+		doubleClickEnabled="true"
+		doubleClick="openEntry(event)"/>
 
 </mx:Panel>
