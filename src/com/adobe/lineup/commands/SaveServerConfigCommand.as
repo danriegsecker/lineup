@@ -19,11 +19,15 @@ package com.adobe.lineup.commands
 			pref.load();
 			pref.setValue("exchangeServer", ssce.exchangeServer);
 			pref.setValue("exchangeUsername", ssce.exchangeUsername);
+			pref.setValue("exchangePassword", ssce.exchangePassword, true);
+			pref.setValue("useHttps", ssce.useHttps);
 			pref.save();
 
 			var ml:ModelLocator = ModelLocator.getInstance();
 			ml.serverInfo.exchangeServer = ssce.exchangeServer;
 			ml.serverInfo.exchangeUsername = ssce.exchangeUsername;
+			ml.serverInfo.exchangePassword = ssce.exchangePassword;
+			ml.serverInfo.useHttps = ssce.useHttps;
 			ml.serverConfigOpen = false;
 
 			var ssme:StartServerMonitorEvent = new StartServerMonitorEvent();

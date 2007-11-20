@@ -6,6 +6,8 @@
 	xmlns:pages="com.adobe.lineup.views.pages.*"
 	xmlns:comps="com.adobe.lineup.views.components.*">
 
+	<mx:Style source="styles.css" />
+
 	<mx:Script>
 		<![CDATA[
 			import com.adobe.lineup.events.ActivateEvent;
@@ -25,7 +27,6 @@
 			private function onCreationComplete():void
 			{
 				this.controller = new Controller();
-
 				// Set up the notification timer
 				this.notificationTimer = new Timer(60 * 1000); // Every minute
 				this.notificationTimer.addEventListener(TimerEvent.TIMER,
@@ -79,6 +80,6 @@
 
 	</mx:VBox>
 
-	<pages:ServerInfoDrawer id="serverConfig" width="400" height="150"/>
+	<pages:ServerInfoDrawer id="serverConfig" width="400" height="250"/>
 
 </mx:WindowedApplication>

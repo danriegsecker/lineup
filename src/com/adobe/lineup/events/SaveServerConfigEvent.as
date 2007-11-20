@@ -8,6 +8,8 @@ package com.adobe.lineup.events
 		
 		public var exchangeServer:String;
 		public var exchangeUsername:String;
+		public var exchangePassword:String;
+		public var useHttps:Boolean;
 		
 		public function SaveServerConfigEvent()
 		{

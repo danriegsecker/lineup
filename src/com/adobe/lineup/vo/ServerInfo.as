@@ -7,5 +7,7 @@ package com.adobe.lineup.vo
 	{
 		public var exchangeServer:String;
 		public var exchangeUsername:String;
+		public var exchangePassword:String;
+		public var useHttps:Boolean;
 	}
 }
