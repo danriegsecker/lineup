@@ -10,6 +10,8 @@
 				var ssce:SaveServerConfigEvent = new SaveServerConfigEvent();
 				ssce.exchangeServer = exchangeServerInput.text;
 				ssce.exchangeUsername = exchangeUsernameInput.text;
+				ssce.exchangePassword = exchangePasswordInput.text;
+				ssce.useHttps = useHttps.selected;
 				ssce.dispatch();
 			}
 		]]>
@@ -21,6 +23,12 @@
 			</mx:FormItem>
 			<mx:FormItem label="Exchange Username">
 				<mx:TextInput id="exchangeUsernameInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangeUsername}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Exchange Password">
+				<mx:TextInput id="exchangePasswordInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangePassword}" displayAsPassword="true"/>
+			</mx:FormItem>
+			<mx:FormItem>
+				<mx:CheckBox label="Use HTTPS:" id="useHttps" selected="{ModelLocator.getInstance().serverInfo.useHttps}"/>
 			</mx:FormItem>
 		</mx:Form>
 		<mx:HBox width="100%" horizontalAlign="center">

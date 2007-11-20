@@ -51,7 +51,7 @@
 		id="dateRange"
 		width="100%" height="100%"
 		allowMultipleSelection="true"
-		selectedRanges="{[{'rangeStart':ModelLocator.getInstance().calStartDate,'rangeEnd':ModelLocator.getInstance().calEndDate}]}"/>
+		selectedRanges="{[ModelLocator.getInstance().dateRange]}"/>
 
 	<mx:Button label="Get Schedule" width="100%" click="onGetSchedule();"/>
 
