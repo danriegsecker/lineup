@@ -7,7 +7,7 @@ package com.adobe.lineup.model
 	import com.adobe.air.notification.Purr;
 	import com.adobe.cairngorm.model.IModelLocator;
 	import com.adobe.lineup.database.Database;
-	import com.adobe.lineup.vo.ScheduleEntry;
+	import com.adobe.lineup.vo.CalendarEntry;
 	import com.adobe.lineup.vo.ServerInfo;
 	
 	import flash.display.Bitmap;
@@ -18,14 +18,13 @@ package com.adobe.lineup.model
 	{
 		protected static var inst:ModelLocator;
 
-		[Bindable] public var calStartDate:Date;
-		[Bindable] public var calEndDate:Date;
-		[Bindable] public var appointments:ArrayCollection;
+		[Bindable] public var dateRange:Object = {"rangeStart":new Date(), "rangeEnd":new Date()};
+		[Bindable] public var events:ArrayCollection;
 		[Bindable] public var serverInfo:ServerInfo;
 		[Bindable] public var serverConfigOpen:Boolean;
 		[Bindable] public var online:Boolean;
-		[Bindable] public var selectedAppointment:ScheduleEntry;
-		[Bindable] public var currentAppointment:ScheduleEntry;
+		[Bindable] public var selectedAppointment:CalendarEntry;
+		[Bindable] public var currentAppointment:CalendarEntry;
 		[Bindable] public var busy:Boolean;
 
 		[Embed(source="assets/application.png")]

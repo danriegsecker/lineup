@@ -6,7 +6,7 @@ package com.adobe.lineup.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.lineup.model.ModelLocator;
-	import com.adobe.lineup.vo.ScheduleEntry;
+	import com.adobe.lineup.vo.CalendarEntry;
 	
 	import flash.display.NotificationType;
 	import flash.system.Shell;
@@ -55,7 +55,7 @@ package com.adobe.lineup.commands
 						{
 							var url:String = AbstractNotification(e.target).id;
 							var ml:ModelLocator = ModelLocator.getInstance();
-							for each (var se:ScheduleEntry in ml.appointments)
+							for each (var se:CalendarEntry in ml.events)
 							{
 								if (se.url == url)
 								{
