@@ -9,7 +9,6 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.events.StartServerMonitorEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.ServerInfo;
-	import com.adobe.utils.DateUtil;
 	
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -39,7 +38,7 @@ package com.adobe.lineup.commands
 			ml.db = db;
 
 			// Initialize variables
-			ml.appointments = new ArrayCollection();
+			ml.events = new ArrayCollection();
 			ml.purr = new Purr(15);
 			
 			// Figure out the alert icon

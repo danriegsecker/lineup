@@ -2,7 +2,6 @@ package com.adobe.lineup.commands
 {
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
-	import com.adobe.exchange.Appointment;
 	import com.adobe.exchange.Calendar;
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
@@ -10,16 +9,18 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.events.GetCurrentAppointmentEvent;
 	import com.adobe.lineup.events.NoAppointmentsFoundEvent;
 	import com.adobe.lineup.model.ModelLocator;
-	import com.adobe.lineup.vo.ScheduleEntry;
+	import com.adobe.lineup.vo.CalendarEntry;
 	import com.adobe.utils.DateUtil;
-	import qs.utils.DateRange;
+	
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
 	import flash.net.URLRequestDefaults;
+	
 	import mx.collections.ArrayCollection;
-	import qs.calendar.CalendarEvent;
+	
+	import qs.utils.DateRange;
 	
 	public class GetAppointmentsCommand implements ICommand
 	{
@@ -87,35 +88,25 @@ package com.adobe.lineup.commands
 				return;
 			}
 
-			ml.appointments.removeAll();
-			ml.events = new Array();
-			var newAppointments:ArrayCollection = new ArrayCollection();
+			ml.events.removeAll();
+			var newApts: ArrayCollection = new ArrayCollection();
 			for each (var row:Object in appointments)
 			{
-				var a:Appointment = new Appointment();
-				a.startDate = row.start_date;
-				a.endDate = row.end_date;
-				a.subject = row.subject;
-				a.textDescription = row.text_description;
-				a.htmlDescription = row.html_description;
-				a.allDay = row.all_day_event;
-				a.location = row.location;
-				a.url = row.url;
-				var entry:ScheduleEntry = new ScheduleEntry(a);
-	            newAppointments.addItem(entry);
-
-				var e:CalendarEvent = new CalendarEvent();
+				var e:CalendarEntry = new CalendarEntry();
 				e.summary = row.subject;
 				e.description = row.text_description;
-				e.range = new qs.utils.DateRange(row.start_date, row.end_date);
+				e.start = row.start_date;
+				e.end = row.end_date;
+				e.range = new DateRange(row.start_date, row.end_date);
 				e.allDay = row.all_day_event;
 				e.location = row.location;
-				e.properties["textDescription"] = row.text_description;
-				e.properties["htmlDescription"] = row.html_description;
-				ml.events.push(e);
+				e.textDescription = row.text_description;
+				e.htmlDescription = row.html_description;
+				e.url = row.url;
+				newApts.addItem(e);
 			}
-			newAppointments.source.sortOn("startDate", Array.NUMERIC);
-			ml.appointments = newAppointments;
+			ml.events = newApts;
+			ml.events.source.sortOn("start", Array.NUMERIC);
 			new GetCurrentAppointmentEvent().dispatch();			
 			this.refreshIconMenu();
 		}
@@ -124,14 +115,14 @@ package com.adobe.lineup.commands
 		{
 			var iconMenu:NativeMenu = new NativeMenu();
 			var ml:ModelLocator = ModelLocator.getInstance();
-			for each (var entry:ScheduleEntry in ml.appointments)
+			for each (var entry:CalendarEntry in ml.events)
 			{
 				var menuItem:NativeMenuItem = new NativeMenuItem(entry.label, false);
 				menuItem.data = entry;
 				menuItem.addEventListener(Event.SELECT,
 					function(e:Event):void
 					{
-						ModelLocator.getInstance().selectedAppointment = NativeMenuItem(e.target).data as ScheduleEntry;
+						ModelLocator.getInstance().selectedAppointment = NativeMenuItem(e.target).data as CalendarEntry;
 					});
 				iconMenu.addItem(menuItem);
 			}

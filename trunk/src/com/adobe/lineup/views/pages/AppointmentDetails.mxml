@@ -9,13 +9,13 @@
 	
 	<mx:Script>
 		<![CDATA[
-			import com.adobe.lineup.vo.ScheduleEntry;
+			import com.adobe.lineup.vo.CalendarEntry;
 			import mx.formatters.DateFormatter;
 			
-			[Bindable] private var _entry:ScheduleEntry;
+			[Bindable] private var _entry:CalendarEntry;
 			private var dateFormatter:DateFormatter;
 						
-			public function set entry(entry:ScheduleEntry):void
+			public function set entry(entry:CalendarEntry):void
 			{
 				this._entry = entry;
 
@@ -27,8 +27,8 @@
 			
 			private function onCreationComplete():void
 			{
-				this.startDate.text = this.dateFormatter.format(this._entry.startDate);
-				this.endDate.text = this.dateFormatter.format(this._entry.endDate);
+				this.startDate.text = this.dateFormatter.format(this._entry.start);
+				this.endDate.text = this.dateFormatter.format(this._entry.end);
 				if (this._entry.allDay)
 				{
 					this.endDate.text += " (all day)";

@@ -7,129 +7,61 @@
 
 	<mx:Script>
 		<![CDATA[
-			import mx.events.CollectionEventKind;
-			import com.adobe.lineup.vo.ScheduleEntry;
-			import com.adobe.lineup.model.ModelLocator;
-			import mx.binding.utils.ChangeWatcher;
-			import mx.events.PropertyChangeEvent;
-			import mx.events.CollectionEvent;
 			import mx.formatters.DateFormatter;
-			import mx.collections.ArrayCollection;
+			import com.adobe.lineup.model.ModelLocator;
 			import com.adobe.lineup.views.pages.AppointmentDetails;
-			import mx.controls.treeClasses.*;
+			import com.adobe.lineup.vo.CalendarEntry;
 
 			private var dateFormatter:DateFormatter;
-			private var entryDateFormatter:DateFormatter;
+			private var timeFormatter:DateFormatter;
 
 			private function onCreationComplete(): void
 			{
 				dateFormatter = new DateFormatter();
-				dateFormatter.formatString = "EEEE MMMM D, YYYY";
+				dateFormatter.formatString = "MM/DD/YY";
 
-				entryDateFormatter = new DateFormatter();
-				entryDateFormatter.formatString = "L:NN";
-				
-				ChangeWatcher.watch(ModelLocator.getInstance(), "appointments", onAppointmentsUpdated);
+				timeFormatter = new DateFormatter();
+				timeFormatter.formatString = "L:NN A";
 			}
 
-			private function selectAppt(event:Event): void
+			private function openEntry(): void
 			{
-            	var selectedNode: XML = Tree(event.target).selectedItem as XML;
-				if (selectedNode.attribute("startDate") != undefined)
-				{
-					for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
-					{
-						var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-						if (se.subject == selectedNode.attribute("data") && 
-						    se.startDate.toString() == selectedNode.attribute("startDate") &&
-						    se.endDate.toString() == selectedNode.attribute("endDate"))
-						{
-							ModelLocator.getInstance().selectedAppointment = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-							break;
-						}
-					}
-				}
- 			}
-
-			[Bindable] private var appointments: XML = new XML('<apts id="Appointments"></apts>');
-
-			private function populateTree(ar: Array): void
-			{
-				appointments = new XML('<apts id="Appointments"></apts>');
-				if (ar.length > 0)
-				{
-					var dt: Date = (ar[0] as ScheduleEntry).startDate;
-					dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
-					var dtXML: XML = new XML();
-					dtXML = <date id={dateFormatter.format(dt)}/>
-					for (var i:uint = 0; i < ar.length; i++)
-					{
-						var entry: ScheduleEntry = ar[i] as ScheduleEntry;
-						var d1: Date = new Date(entry.startDate.getFullYear(), entry.startDate.getMonth(), entry.startDate.getDate());
-						if (d1.toString() != dt.toString())
-						{
-							appointments = appointments.appendChild(dtXML);
-							dt = d1;
-							dtXML = <date id={dateFormatter.format(dt)}/>
-						}
-						var apt: XML = new XML();
-						apt = <appointment id={entryDateFormatter.format(entry.startDate) + ' - ' + entry.label} data={entry.subject} startDate={entry.startDate} endDate={entry.endDate}/>
-						dtXML = dtXML.appendChild(apt);
-					}
-					appointments = appointments.appendChild(dtXML);
-				}
-
+				var details:AppointmentDetails = new AppointmentDetails();
+				details.entry = aptsGrid.selectedItem as CalendarEntry;
+				details.open(true);
 			}
 
-			private function onAppointmentsUpdated(e:PropertyChangeEvent):void
+			private function showclm(item:Object, column: DataGridColumn):String
 			{
-				if (e.newValue != null)
-				{
-					this.populateTree((e.newValue as ArrayCollection).source);
-				}
-			}
-
-			
-			private function openEntry(event: Event): void
-			{
-				if (event.target != null && event.target.parent != null && event.target.parent is TreeItemRenderer)
-				{
-					var _oTreeListData:TreeListData = TreeListData((event.target.parent as TreeItemRenderer).listData);
-					if (_oTreeListData != null)
+				var result:String = "";
+				var dt: Date = new Date();
+				dt = new Date(dt.getFullYear(), dt.getMonth(), dt.getDate());
+				var stDate: Date = new Date(item.start.getFullYear(), item.start.getMonth(), item.start.getDate());
+				if (item != null)
+					switch (column) 
 					{
-						var selectedNode: XML = _oTreeListData.item as XML;
-						if (selectedNode.attribute("startDate") != undefined)
-						{
-							for (var j:uint = 0; j < ModelLocator.getInstance().appointments.length; j++)
-							{
-								var se: ScheduleEntry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-								if (se.subject == selectedNode.attribute("data") && 
-								    se.startDate.toString() == selectedNode.attribute("startDate") &&
-								    se.endDate.toString() == selectedNode.attribute("endDate"))
-								{
-									var details:AppointmentDetails = new AppointmentDetails();
-									details.entry = ModelLocator.getInstance().appointments[j] as ScheduleEntry;
-									details.open(true);
-									break;
-								}
-							}
-						}
+						case clmDate: result = stDate == dt ? 'Today' : dateFormatter.format(item.start); break;
+						case clmTime: result = timeFormatter.format(item.start); break;
+						case clmSubject: result = item.subject; break;
 					}
-				}
+				return result;
 			}
 
 		]]>
 	</mx:Script>
 
-	<mx:Tree 
-		id="upcomingAppointments"
-		width="100%" height="100%"
-		itemRenderer="com.adobe.lineup.views.components.CurrApptRenderer"
-		labelField="@id"
-		dataProvider="{appointments}"
-		showRoot="false"
-		change="selectAppt(event)"
-		doubleClickEnabled="true"
-		doubleClick="openEntry(event)"/>
+ 	<mx:DataGrid 
+		id="aptsGrid"
+		height="100%" width="100%" 
+		borderStyle="none" editable="false" 
+		focusEnabled="true" 
+		dataProvider="{ModelLocator.getInstance().events}" 
+		doubleClickEnabled="true" doubleClick="openEntry()">
+		<mx:columns>
+			<mx:DataGridColumn id="clmDate" dataField="start" headerText="Date" labelFunction="showclm" width="65"/>
+			<mx:DataGridColumn id="clmTime" dataField="start" headerText="Time" labelFunction="showclm" width="65"/>
+			<mx:DataGridColumn id="clmSubject" dataField="subject" headerText="Title" labelFunction="showclm"/>
+		</mx:columns>
+	</mx:DataGrid>
 
 </mx:Panel>

@@ -13,6 +13,8 @@
 			import com.adobe.lineup.model.ModelLocator;
 			import mx.binding.utils.ChangeWatcher;
 			import mx.events.PropertyChangeEvent;
+			import com.adobe.lineup.vo.CalendarEntry;
+			import com.adobe.lineup.views.pages.AppointmentDetails;
 
 			private static const displayOptions:Array = ['month','week','day'];
 			
@@ -35,7 +37,12 @@
 	        
 	        private function onItemDoubleClick(e:Event):void
 	        {
-	        	trace(e);
+	        	if (e.target != null && e.target.parent != null && e.target.parent.data != null && e.target.parent.data is CalendarEntry)
+	        	{
+					var details:AppointmentDetails = new AppointmentDetails();
+					details.entry = e.target.parent.data as CalendarEntry;
+					details.open(true);
+	        	}
 	        }
 		]]>
 
