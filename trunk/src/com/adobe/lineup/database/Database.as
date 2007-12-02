@@ -17,9 +17,9 @@ package com.adobe.lineup.database
 		
 		public function initialize():void
 		{
-			this.conn = new SQLConnection(true);
+			this.conn = new SQLConnection();
 			var dbFile:File = File.applicationStorageDirectory.resolvePath("lineup.db");
-			conn.open(dbFile, true, true);
+			conn.open(dbFile, SQLMode.CREATE);
 			var stmt:SQLStatement = new SQLStatement();
 			stmt.sqlConnection = this.conn;
 			stmt.text = sql.appointments.create;

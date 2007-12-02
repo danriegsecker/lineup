@@ -5,7 +5,7 @@ package com.adobe.lineup.commands
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.air.alert.NativeAlert;
-	import flash.system.Shell;
+	import flash.desktop.NativeApplication;
 	
 	public class NoAppointmentsFoundCommand implements ICommand
 	{
@@ -20,7 +20,7 @@ package com.adobe.lineup.commands
 			{
 				message = "No cached appointments were found for the specified date range. If possible, connect to the network and try again.";
 			}
-			NativeAlert.show(message, "No Appointments Found", NativeAlert.OK, true, Shell.shell.openedWindows[0], null, ModelLocator.getInstance().alertIcon);
+			NativeAlert.show(message, "No Appointments Found", NativeAlert.OK, true, NativeApplication.nativeApplication.openedWindows[0], null, ModelLocator.getInstance().alertIcon);
 		}
 	}
 }
