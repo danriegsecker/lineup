@@ -49,19 +49,19 @@
 					});
 				this.appointmentUpdateTimer.start();
 
-				Shell.shell.addEventListener(InvokeEvent.INVOKE,
+				NativeApplication.nativeApplication.addEventListener(InvokeEvent.INVOKE,
 					function(e:InvokeEvent):void
 					{
 						new InvocationEvent().dispatch();
 					});
 
-				Shell.shell.addEventListener(Event.ACTIVATE,
+				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE,
 					function(e:Event):void
 					{
 						new ActivateEvent().dispatch();
 					});
 				
-				Shell.shell.addEventListener(Event.EXITING,
+				NativeApplication.nativeApplication.addEventListener(Event.EXITING,
 					function(e:Event):void
 					{
 						new ShutdownEvent().dispatch();

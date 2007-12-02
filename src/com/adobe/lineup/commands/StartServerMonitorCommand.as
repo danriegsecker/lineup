@@ -20,7 +20,7 @@ package com.adobe.lineup.commands
 			var monitor:URLMonitor = new URLMonitor(req);
 			monitor.addEventListener(StatusEvent.STATUS, onNetworkStatusChange);
 			monitor.pollInterval = 0;
-			monitor.acceptableStatuses.push(302);
+			monitor.acceptableStatusCodes.push(302);
 			monitor.start();
 			ml.serverMonitor = monitor;
 		}

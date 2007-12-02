@@ -8,8 +8,8 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
 	
-	import flash.display.NotificationType;
-	import flash.system.Shell;
+	import flash.desktop.NotificationType;
+	import flash.desktop.NativeApplication;
 	
 	import mx.formatters.DateFormatter;
 
@@ -36,12 +36,12 @@ package com.adobe.lineup.commands
 				var notificationDateFormatter:DateFormatter = new DateFormatter();
 				notificationDateFormatter.formatString = "L:NN A";
 
-				if (Shell.shell.activeWindow == null)
+				if (NativeApplication.nativeApplication.activeWindow == null)
 				{
 					ml.purr.setIcons([ml.alertIcon], "Upcoming appointment");
 				}
 				
-				ml.purr.alert(NotificationType.CRITICAL, Shell.shell.openedWindows[0]);
+				ml.purr.alert(NotificationType.CRITICAL, NativeApplication.nativeApplication.openedWindows[0]);
 
 				for each (var appt:Object in alerts)
 				{
@@ -59,7 +59,7 @@ package com.adobe.lineup.commands
 							{
 								if (se.url == url)
 								{
-									Shell.shell.activateApplication();
+									NativeApplication.nativeApplication.activate();
 									ml.selectedAppointment = null;
 									ml.selectedAppointment = se;
 									break;

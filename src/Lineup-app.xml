@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<application xmlns="http://ns.adobe.com/air/application/1.0.M5" appId="com.adobe.lineup" version="1.0 Beta">
-
+<application xmlns="http://ns.adobe.com/air/application/1.0.M6">
 	<name>Lineup</name>
-	<title>Lineup</title>
+	<id>com.adobe.lineup</id>
+	<filename>Lineup</filename>
+	<version>v1</version>
 	<description>A cross-platform Exchange calendaring application. Written by Christian Cantrell and Prabhakar Shenoy.</description>
-	<copyright></copyright>
-	
+	<copyright>Copyright © 2007 Adobe Systems Incorporated. All rights reserved.</copyright>
+
 	<initialWindow>
+		<content>[This value will be overwritten by Flex Builder in the output app.xml]</content>
 		<title>Lineup</title>
-		<content>!ApolloApplicationWizardPage.rootContentValue!</content>
 		<systemChrome>standard</systemChrome>
 		<transparent>false</transparent>
 		<visible>true</visible>
@@ -17,17 +18,37 @@
 		<resizable>true</resizable>
 		<width>800</width>
 		<height>600</height>
+		<!-- <x></x> -->
+		<!-- <y></y> -->
 		<minSize>800 600</minSize>
+		<!-- <maxSize></maxSize> -->
 	</initialWindow>
-	  
+
 	<!-- <installFolder></installFolder> -->
-	<!-- <programMenuFolder>Example Company/Example Application</programMenuFolder> -->
-	    
+	<!-- <programMenuFolder></programMenuFolder> -->
+
+	<!-- The icon the system uses for the application. For at least one resolution,
+		 specify the path to a PNG file included in the AIR package. Optional. -->
 	<icon>
-		<!-- <image16x16>icons/AIRApp_16.png</image16x16> -->      
-		<!-- <image32x32>icons/AIRApp_32.png</image32x32> -->      
-		<!-- <image48x48>icons/AIRApp_48.png</image48x48> -->      
 		<image128x128>assets/application.png</image128x128>
 	</icon>
+
+	<!-- <customUpdateUI></customUpdateUI> -->
+	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
+
+	<!-- <fileTypes> -->
+		<!-- <fileType> -->
+			<!-- <name></name> -->
+			<!-- <extension></extension> -->
+			<!-- <description></description> -->
+			<!-- <contentType></contentType> -->
+			<!-- <icon>
+				<image16x16></image16x16>
+				<image32x32></image32x32>
+				<image48x48></image48x48>
+				<image128x128></image128x128>
+			</icon> -->
+		<!-- </fileType> -->
+	<!-- </fileTypes> -->
 
 </application>

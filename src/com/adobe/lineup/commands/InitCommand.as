@@ -17,7 +17,7 @@ package com.adobe.lineup.commands
 	import flash.filesystem.FileStream;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.system.Shell;
+	import flash.desktop.NativeApplication;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -28,7 +28,7 @@ package com.adobe.lineup.commands
 			var ml:ModelLocator = ModelLocator.getInstance();
 
 			// Set up the database
-			var sqlFile:File = File.applicationResourceDirectory.resolvePath("sql.xml");
+			var sqlFile:File = File.applicationDirectory.resolvePath("sql.xml");
 			var sqlFileStream:FileStream = new FileStream();
 			sqlFileStream.open(sqlFile, FileMode.READ);
 			var sql:XML = new XML(sqlFileStream.readUTFBytes(sqlFileStream.bytesAvailable));
@@ -45,7 +45,7 @@ package com.adobe.lineup.commands
 			var scaledAlert:BitmapData;
 			var scaledApp:BitmapData;
 			
-			if (Shell.supportsDockIcon)
+			if (NativeApplication.supportsDockIcon)
 			{
 				var alertTmp:Bitmap = new ml.alertIconClass();
 				alertTmp.scaleX = 64 / alertTmp.width;
@@ -63,7 +63,7 @@ package com.adobe.lineup.commands
 				ml.alertIcon = new Bitmap(appData);
 				ml.appIcon = new ml.appIconClass();
 			}
-			else if (Shell.supportsSystemTrayIcon)
+			else if (NativeApplication.supportsSystemTrayIcon)
 			{
 				ml.appIcon = new ml.appIconClass();
 				ml.alertIcon = new ml.alertIconClass();
