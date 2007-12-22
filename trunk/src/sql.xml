@@ -127,7 +127,7 @@
 	            WHERE
 	            	start_date >= :current_date
 	            AND
-	                start_date - (reminder_offset * 1000) <= :current_date
+	                start_date - (reminder_offset / 86400.0) <= :current_date
 	            ORDER BY
 	            	start_date ASC
             ]]>

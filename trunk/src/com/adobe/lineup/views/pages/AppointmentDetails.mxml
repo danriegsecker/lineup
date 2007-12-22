@@ -2,10 +2,17 @@
 <mx:Window
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	layout="absolute"
-	width="400"
+	width="350"
 	height="400"
+	paddingBottom="0" paddingLeft="25" paddingRight="0" paddingTop="0"
 	type="utility"
-	creationComplete="onCreationComplete();">
+	transparent="true"
+	systemChrome="none"
+	showFlexChrome="false"
+	creationComplete="onCreationComplete();"
+	xmlns:flash.filters="flash.filters.*"
+	alwaysInFront="true"
+	closing="onClose();">
 	
 	<mx:Script>
 		<![CDATA[
@@ -20,61 +27,134 @@
 				this._entry = entry;
 
 				this.dateFormatter = new DateFormatter();
-				this.dateFormatter.formatString = (this._entry.allDay) ? "EEEE MMMM D" : "EEEE MMMM D at L:NN A";
-
-				this.title = this._entry.subject;
+				
+				this.dateFormatter.formatString = (this._entry.allDay) ? "EEEE MMMM D" : "EEE MMM D at L:NN A";
 			}
 			
 			private function onCreationComplete():void
 			{
+				this.eventTitle.text = _entry.subject;
+				this.htmlDescription.htmlText = (_entry.htmlDescription != null) ? _entry.htmlDescription : "<p><strong>No description.</strong></p>";
+
 				this.startDate.text = this.dateFormatter.format(this._entry.start);
-				this.endDate.text = this.dateFormatter.format(this._entry.end);
-				if (this._entry.allDay)
+				if (!this._entry.allDay)
+				{
+					this.endDate.text = this.dateFormatter.format(this._entry.end);
+				}
+				else
 				{
 					this.endDate.text += " (all day)";
 				}
 				this.location.text = (this._entry.location != null) ? this._entry.location : "(none)";
-				this.htmlDescription.htmlText = (this._entry.htmlDescription != null) ? this._entry.htmlDescription : "<p>(none)</p>";
-				this.textDescription.text = (this._entry.textDescription != null) ? this._entry.textDescription : "(none)";
+				
+				// Listen for main window resizes
+				var mainWindow:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
+				mainWindow.addEventListener(NativeWindowBoundsEvent.MOVING, onMainWindowMove);
+				mainWindow.addEventListener(NativeWindowBoundsEvent.MOVE, onMainWindowMove);
+				
+				// Listen for activation and deactivation
+				NativeApplication.nativeApplication.addEventListener(Event.DEACTIVATE, onDeactivate);
+				NativeApplication.nativeApplication.addEventListener(Event.ACTIVATE, onActivate);
+				
+				this.nativeWindow.addEventListener(Event.CLOSE, onClose);
+				
+				htmlDescription.htmlLoader.navigateInSystemBrowser = true;
 			}
+			
+			private function doDrag(e:MouseEvent):void
+			{
+				if (!e.buttonDown) return;
+				if (arrowBox.styleName == 'detailWindow')
+				{
+					arrowBox.styleName = "detailWindowNoArrow";
+				}
+				this.nativeWindow.startMove();
+			}
+			
+			public function onMainWindowMove(e:NativeWindowBoundsEvent):void
+			{
+				if (arrowBox.styleName == 'detailWindow')
+				{
+					arrowBox.styleName = "detailWindowNoArrow";
+				}
+
+				/* Code to make the detail window follow the main window.  Too buggy...
+				if (e.beforeBounds.x == e.afterBounds.x && e.beforeBounds.y == e.afterBounds.y)
+				{
+					return;
+				}
+				var newBounds:Rectangle = new Rectangle(this.nativeWindow.bounds.x + (e.afterBounds.x - e.beforeBounds.x),
+														this.nativeWindow.bounds.y + (e.afterBounds.y - e.beforeBounds.y),
+														this.nativeWindow.bounds.width,
+														this.nativeWindow.bounds.height);
+				this.nativeWindow.bounds = newBounds;
+				*/
+			}
+			
+			private function onDeactivate(e:Event):void
+			{
+				this.nativeWindow.alwaysInFront = false;
+			}
+
+			private function onActivate(e:Event):void
+			{
+				this.nativeWindow.alwaysInFront = true;
+			}
+			
+			private function onClose(e:Event = null):void
+			{
+				var mainWindow:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
+				mainWindow.removeEventListener(NativeWindowBoundsEvent.MOVING, onMainWindowMove);
+				mainWindow.removeEventListener(NativeWindowBoundsEvent.MOVE, onMainWindowMove);
+				NativeApplication.nativeApplication.removeEventListener(Event.ACTIVATE, onActivate);
+				NativeApplication.nativeApplication.removeEventListener(Event.DEACTIVATE, onDeactivate);
+				this.nativeWindow.removeEventListener(Event.CLOSE, onClose);
+			}
+			
 		]]>
 	</mx:Script>
 
-	<mx:VBox width="100%" height="100%" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
+	<flash.filters:DropShadowFilter id="textFilter" quality="4" distance="1" angle="90" blurX="2" blurY="2" color="0x000000" alpha="0.65" />
 
-		<mx:Canvas width="100%">
+	<mx:VBox id="arrowBox" width="350" height="400" styleName="detailWindow" horizontalAlign="center" paddingLeft="25" paddingBottom="5" verticalGap="0">
+
+	    <mx:Label id="eventTitle" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}" width="280" truncateToFit="true" textAlign="center"/>
+
+		<mx:HRule width="300" strokeWidth="2" strokeColor="#B9B9B9" shadowColor="#FFFFFF"/>
+	    
+	    <mx:Grid width="300" verticalGap="0" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	    	<mx:GridRow>
+	    		<mx:GridItem width="75">
+				    <mx:Label text="Start Date:" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}"/>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="225">
+				    <mx:Label id="startDate" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}"/>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	<mx:GridRow>
+	    		<mx:GridItem width="75">
+				    <mx:Label text="End Date:" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}"/>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="225">
+				    <mx:Label id="endDate" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}"/>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    	<mx:GridRow>
+	    		<mx:GridItem width="75">
+				    <mx:Label text="Location:" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}"/>
+	    		</mx:GridItem>
+	    		<mx:GridItem width="225">
+				    <mx:Label id="location" styleName="today" paddingTop="1" paddingBottom="0" filters="{[textFilter]}" width="225" truncateToFit="true"/>
+	    		</mx:GridItem>
+	    	</mx:GridRow>
+	    </mx:Grid>
+
+	    <mx:HTML id="htmlDescription" width="90%" height="100%" paintsDefaultBackground="false" backgroundColor="#cccccc"/>
 	
-			<mx:constraintColumns>
-				<mx:ConstraintColumn width="40%" id="col_1"/>
-				<mx:ConstraintColumn width="60%" id="col_2"/>
-			</mx:constraintColumns>
-			
-			<mx:constraintRows>
-				<mx:ConstraintRow id="row_1"/>
-				<mx:ConstraintRow id="row_2"/>
-				<mx:ConstraintRow id="row_3"/>
-			</mx:constraintRows>
-			
-			<mx:Label id="startDateLabel" right="col_1:10" top="row_1:0" text="Start Date:" fontWeight="bold"/>
-			<mx:Label id="startDate"      left="col_2:10"  top="row_1:0"/>
-		
-			<mx:Label id="endDateLabel" right="col_1:10" top="row_2:0" text="End Date:" fontWeight="bold"/>
-			<mx:Label id="endDate"      left="col_2:10"  top="row_2:0"/>
-		
-			<mx:Label id="locationLabel" right="col_1:10" top="row_3:0" text="Location:" fontWeight="bold"/>
-			<mx:Label id="location"      left="col_2:10"  top="row_3:0"/>
+	    <mx:Button label="Close" click="this.close();"/>
 	
-		</mx:Canvas>
-
-		<mx:TabNavigator width="100%" height="100%" creationPolicy="all" horizontalAlign="center" paddingTop="5" paddingRight="5" paddingBottom="5" paddingLeft="5">
-			<mx:Canvas width="100%" height="100%" label="HTML Description">
-				<mx:HTML width="100%" height="100%" id="htmlDescription"/>
-			</mx:Canvas>
-			<mx:Canvas width="100%" height="100%" label="Text Description">
-				<mx:TextArea width="100%" height="100%" id="textDescription"/>
-			</mx:Canvas>
-		</mx:TabNavigator>
-
 	</mx:VBox>
+
+	<mx:Canvas x="25" y="0" width="325" height="80" mouseMove="doDrag(event);" alpha="0"/>
 
 </mx:Window>

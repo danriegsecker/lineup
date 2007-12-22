@@ -27,8 +27,8 @@
 			<mx:FormItem label="Exchange Password">
 				<mx:TextInput id="exchangePasswordInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangePassword}" displayAsPassword="true"/>
 			</mx:FormItem>
-			<mx:FormItem>
-				<mx:CheckBox label="Use HTTPS:" id="useHttps" selected="{ModelLocator.getInstance().serverInfo.useHttps}"/>
+			<mx:FormItem label="Use HTTPS">
+				<mx:CheckBox id="useHttps" selected="{ModelLocator.getInstance().serverInfo.useHttps}"/>
 			</mx:FormItem>
 		</mx:Form>
 		<mx:HBox width="100%" horizontalAlign="center">

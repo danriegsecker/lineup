@@ -49,13 +49,14 @@ package com.adobe.lineup.commands
 													  " - " +
 													  notificationDateFormatter.format(appt.end_date),
 													  appt.subject, null, 5, new ml.appIconClass());
+					notification.width = 250;
 					notification.id = appt.url;
 					notification.addEventListener(NotificationClickedEvent.NOTIFICATION_CLICKED_EVENT,
 						function(e:NotificationClickedEvent):void
 						{
 							var url:String = AbstractNotification(e.target).id;
 							var ml:ModelLocator = ModelLocator.getInstance();
-							for each (var se:CalendarEntry in ml.events)
+							for each (var se:CalendarEntry in ml.appointments)
 							{
 								if (se.url == url)
 								{
