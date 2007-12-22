@@ -6,11 +6,8 @@ package com.adobe.lineup.commands
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
-	import com.adobe.lineup.events.GetCurrentAppointmentEvent;
-	import com.adobe.lineup.events.NoAppointmentsFoundEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
-	import com.adobe.utils.DateUtil;
 	
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
@@ -19,8 +16,6 @@ package com.adobe.lineup.commands
 	import flash.net.URLRequestDefaults;
 	
 	import mx.collections.ArrayCollection;
-	
-	import qs.utils.DateRange;
 	
 	public class GetAppointmentsCommand implements ICommand
 	{
@@ -53,9 +48,9 @@ package com.adobe.lineup.commands
 				function onAppointmentList(exchangeEvent:ExchangeAppointmentListEvent):void
 				{
 					ml.online = true;
+					ml.lastSynchronized = new Date();
 		
-					var appointments:Array = exchangeEvent.appointments;
-		
+					var appointments:Array = exchangeEvent.appointments;					
 					ml.db.deleteAppointments(gae.startDate, gae.endDate);
 					if (appointments != null && appointments.length > 0)
 					{
@@ -70,8 +65,14 @@ package com.adobe.lineup.commands
 						ml.busy = false;
 					}
 				});
-			cal.getAppointments(DateUtil.getUTCDate(gae.startDate),
-								DateUtil.getUTCDate(gae.endDate));
+			var start:Date = gae.startDate;
+			var end:Date = gae.endDate;
+			end = new Date(end.time + (60*60*24*1000));
+			cal.getAppointments(new Date(start.time + (start.timezoneOffset * 60000) - (60*1000)),
+								new Date(end.time + (end.timezoneOffset * 60000)));
+			// For testing purposes only
+			//this.populateFromDatabase(gae.startDate, gae.endDate);
+
 		}
 
 		private function populateFromDatabase(startDate:Date, endDate:Date):void
@@ -80,44 +81,40 @@ package com.adobe.lineup.commands
 			var appointments:Array = ml.db.getAppointments(startDate, endDate);
 
 			ml.busy = false;
-			ml.dateRange = {"rangeStart":startDate, "rangeEnd":endDate};
+
+			ml.appointments = new ArrayCollection();
 
 			if (appointments == null || appointments.length == 0)
 			{
-				new NoAppointmentsFoundEvent().dispatch();
 				return;
 			}
 
-			ml.events.removeAll();
-			var newApts: ArrayCollection = new ArrayCollection();
+			var newAppts:ArrayCollection = new ArrayCollection();
 			for each (var row:Object in appointments)
 			{
 				var e:CalendarEntry = new CalendarEntry();
-				e.summary = row.subject;
+				e.subject = row.subject;
 				e.description = row.text_description;
 				e.start = row.start_date;
 				e.end = row.end_date;
-				e.range = new DateRange(row.start_date, row.end_date);
 				e.allDay = row.all_day_event;
 				e.location = row.location;
 				e.textDescription = row.text_description;
 				e.htmlDescription = row.html_description;
 				e.url = row.url;
-				newApts.addItem(e);
+				newAppts.addItem(e);
 			}
-			ml.events = newApts;
-			ml.events.source.sortOn("start", Array.NUMERIC);
-			new GetCurrentAppointmentEvent().dispatch();			
-			this.refreshIconMenu();
+			newAppts.source.sortOn("start", Array.NUMERIC);
+			ml.appointments = newAppts;
 		}
 		
 		private function refreshIconMenu():void
 		{
 			var iconMenu:NativeMenu = new NativeMenu();
 			var ml:ModelLocator = ModelLocator.getInstance();
-			for each (var entry:CalendarEntry in ml.events)
+			for each (var entry:CalendarEntry in ml.appointments)
 			{
-				var menuItem:NativeMenuItem = new NativeMenuItem(entry.label, false);
+				var menuItem:NativeMenuItem = new NativeMenuItem(entry.subject, false);
 				menuItem.data = entry;
 				menuItem.addEventListener(Event.SELECT,
 					function(e:Event):void

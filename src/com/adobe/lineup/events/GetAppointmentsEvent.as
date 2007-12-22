@@ -23,7 +23,9 @@ package com.adobe.lineup.events
 
 		public function set endDate(d:Date):void
 		{
-			this._endDate = DateUtil.makeNight(d);
+			var tmpDate:Date = DateUtil.makeNight(d);
+			tmpDate = new Date(tmpDate.time + 1000);			
+			this._endDate = tmpDate;
 		}
 		
 		public function get startDate():Date

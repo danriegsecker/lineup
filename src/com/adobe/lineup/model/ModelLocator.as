@@ -18,15 +18,16 @@ package com.adobe.lineup.model
 	{
 		protected static var inst:ModelLocator;
 
-		[Bindable] public var dateRange:Object = {"rangeStart":new Date(), "rangeEnd":new Date()};
-		[Bindable] public var events:ArrayCollection;
+		[Bindable] public var selectedDate:Date;
+		[Bindable] public var appointments:ArrayCollection;
 		[Bindable] public var serverInfo:ServerInfo;
 		[Bindable] public var serverConfigOpen:Boolean;
 		[Bindable] public var online:Boolean;
 		[Bindable] public var selectedAppointment:CalendarEntry;
-		[Bindable] public var currentAppointment:CalendarEntry;
+		[Bindable] public var nextAppointment:CalendarEntry;
 		[Bindable] public var busy:Boolean;
-
+		[Bindable] public var lastSynchronized:Date;
+		
 		[Embed(source="assets/application.png")]
 		public var appIconClass:Class;
 

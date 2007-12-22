@@ -30,7 +30,10 @@ package com.adobe.lineup.database
 
 		public function shutdown():void
 		{
-			this.conn.close();
+			if (this.conn.connected)
+			{
+				this.conn.close();
+			}
 		}
 
 		public function getAppointments(startDate:Date, endDate:Date):Array
@@ -117,6 +120,7 @@ package com.adobe.lineup.database
 
 		public function removeAlerts():void
 		{
+			if (!this.conn.connected) return;
 			var stmt:SQLStatement = new SQLStatement();
 			stmt.sqlConnection = this.conn;
 			stmt.text = sql.alerts.deleteAll;

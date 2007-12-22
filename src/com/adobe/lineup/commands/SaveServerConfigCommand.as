@@ -35,7 +35,7 @@ package com.adobe.lineup.commands
 
 			var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
 			gae.startDate = new Date();
-			gae.endDate = new Date(gae.startDate.time + (60 * 60 * 24 * 7 * 1000)); // One week
+			gae.endDate = new Date();
 			gae.updateUI = true;
 			gae.dispatch();
 		}

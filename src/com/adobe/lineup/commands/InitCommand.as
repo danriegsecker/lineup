@@ -10,6 +10,7 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.ServerInfo;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.filesystem.File;
@@ -17,7 +18,6 @@ package com.adobe.lineup.commands
 	import flash.filesystem.FileStream;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	import flash.desktop.NativeApplication;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -38,7 +38,7 @@ package com.adobe.lineup.commands
 			ml.db = db;
 
 			// Initialize variables
-			ml.events = new ArrayCollection();
+			ml.appointments = new ArrayCollection();
 			ml.purr = new Purr(15);
 			
 			// Figure out the alert icon
@@ -109,9 +109,11 @@ package com.adobe.lineup.commands
 				// Get the default appointment date range.
 				var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
 				gae.startDate = new Date();
-				gae.endDate = new Date(gae.startDate.time + (60 * 60 * 24 * 7 * 1000)); // One week
+				gae.endDate = new Date();
 				gae.updateUI = true;
 				gae.dispatch();
+
+				ml.selectedDate = new Date();
 			}
 		}
 	}
