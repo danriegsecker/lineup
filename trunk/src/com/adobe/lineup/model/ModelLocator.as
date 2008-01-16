@@ -36,6 +36,7 @@ package com.adobe.lineup.model
 
 		public var appIcon:Bitmap;
 		public var alertIcon:Bitmap;
+		public var notificationIcon:Bitmap;
 
 		public var db:Database;
 		public var serverMonitor:ServiceMonitor;
