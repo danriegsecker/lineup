@@ -8,8 +8,9 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
 	
-	import flash.desktop.NotificationType;
 	import flash.desktop.NativeApplication;
+	import flash.desktop.NotificationType;
+	import flash.display.Bitmap;
 	
 	import mx.formatters.DateFormatter;
 
@@ -48,7 +49,7 @@ package com.adobe.lineup.commands
 					var notification:Notification = new Notification(notificationDateFormatter.format(appt.start_date) +
 													  " - " +
 													  notificationDateFormatter.format(appt.end_date),
-													  appt.subject, null, 5, new ml.appIconClass());
+													  appt.subject, null, 5, new Bitmap(ml.notificationIcon.bitmapData.clone()));
 					notification.width = 250;
 					notification.id = appt.url;
 					notification.addEventListener(NotificationClickedEvent.NOTIFICATION_CLICKED_EVENT,
