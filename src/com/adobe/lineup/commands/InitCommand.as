@@ -7,9 +7,9 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.database.Database;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
 	import com.adobe.lineup.events.StartServerMonitorEvent;
+	import com.adobe.lineup.events.UpdateIconsEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.ServerInfo;
-	
 	import flash.desktop.NativeApplication;
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
@@ -18,14 +18,33 @@ package com.adobe.lineup.commands
 	import flash.filesystem.FileStream;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
-	
+	import flash.events.MouseEvent;
 	import mx.collections.ArrayCollection;
+	import flash.desktop.SystemTrayIcon;
 	
 	public class InitCommand implements ICommand
 	{
 		public function execute(e:CairngormEvent):void
 		{
 			var ml:ModelLocator = ModelLocator.getInstance();
+
+			// Initialize variables
+			ml.appointments = new ArrayCollection();
+			ml.purr = new Purr(15);
+			ml.selectedDate = new Date();
+
+			// Create icons.
+			new UpdateIconsEvent().dispatch();
+			
+			// Manage clicks on the system tray icon.
+			if (NativeApplication.supportsSystemTrayIcon)
+			{
+				SystemTrayIcon(NativeApplication.nativeApplication.icon).addEventListener(MouseEvent.CLICK,
+					function(e:MouseEvent):void
+					{
+						NativeApplication.nativeApplication.activate();
+					});
+			}
 
 			// Set up the database
 			var sqlFile:File = File.applicationDirectory.resolvePath("sql.xml");
@@ -36,56 +55,6 @@ package com.adobe.lineup.commands
 			var db:Database = new Database(sql);
 			db.initialize();
 			ml.db = db;
-
-			// Initialize variables
-			ml.appointments = new ArrayCollection();
-			ml.purr = new Purr(15);
-			
-			// Figure out the alert icon
-			var scaledAlert:BitmapData;
-			var scaledApp:BitmapData;
-			
-			if (NativeApplication.supportsDockIcon)
-			{
-				var alertTmp:Bitmap = new ml.alertIconClass();
-				alertTmp.scaleX = 64 / alertTmp.width;
-				alertTmp.scaleY = 64 / alertTmp.height;
-
-				scaledAlert = new BitmapData(alertTmp.width, alertTmp.height, true, 0xffffff);
-				scaledAlert.draw(alertTmp, alertTmp.transform.matrix, null, null, null, true);
-
-				var appData:BitmapData = new ml.appIconClass().bitmapData;
-				
-				appData.copyPixels(scaledAlert,
-								   new Rectangle(0, 0, scaledAlert.width, scaledAlert.height),
-								   new Point(appData.width-scaledAlert.width, 0),
-								   null, null, true);
-				ml.alertIcon = new Bitmap(appData);
-				ml.appIcon = new ml.appIconClass();
-			}
-			else if (NativeApplication.supportsSystemTrayIcon)
-			{
-				ml.appIcon = new ml.appIconClass();
-				ml.alertIcon = new ml.alertIconClass();
-
-				ml.appIcon.scaleX = 16 / ml.appIcon.width;
-				ml.appIcon.scaleY = 16 / ml.appIcon.height;
-
-				ml.alertIcon.scaleX = 16 / ml.alertIcon.width;
-				ml.alertIcon.scaleY = 16 / ml.alertIcon.height;
-
-				scaledApp = new BitmapData(ml.appIcon.width, ml.appIcon.height, true, 0xffffff);
-				scaledAlert = new BitmapData(ml.alertIcon.width, ml.alertIcon.height, true, 0xffffff);
-				
-				scaledApp.draw(ml.appIcon, ml.appIcon.transform.matrix, null, null, null, true);
-				scaledAlert.draw(ml.alertIcon, ml.appIcon.transform.matrix, null, null, null, true);
-
-				ml.appIcon = new Bitmap(scaledApp);
-				ml.alertIcon = new Bitmap(scaledAlert);
-			}
-
-			// Set app icons
-			ml.purr.setIcons([ml.appIcon]);
 
 			// Get server configuration
 			var pref:Preference = new Preference();
@@ -112,8 +81,6 @@ package com.adobe.lineup.commands
 				gae.endDate = new Date();
 				gae.updateUI = true;
 				gae.dispatch();
-
-				ml.selectedDate = new Date();
 			}
 		}
 	}
