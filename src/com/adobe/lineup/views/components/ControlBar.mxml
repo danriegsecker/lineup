@@ -16,10 +16,6 @@
 			[Embed(source="assets/sync/sync.swf", symbol="icon_offline")]
 			public var offlineIconClass:Class;
 
-			[Bindable]
-			[Embed(source="assets/sync/sync.swf", symbol="icon_syncronizing")]
-			public var syncingIconClass:Class;
-
 			[Bindable] private var dateFormatter:DateFormatter;
 
 			private function onCreationComplete():void
@@ -68,7 +64,7 @@
 						 paddingTop="2">
 					
 					<mx:HBox id="statusBar" verticalAlign="middle" height="100%">
-						<mx:Image id="statusIcon" source="{(ModelLocator.getInstance().online) ? onlineIconClass : offlineIconClass}" />
+						<mx:Image id="statusIcon" source="{(ModelLocator.getInstance().online) ? onlineIconClass : offlineIconClass}"/>
 						<mx:Label id="statusLabel" height="14" text="{(ModelLocator.getInstance().online) ? 'Connected' : 'Disconnected'}" styleName="sync" />
 						<mx:VRule height="100%" strokeWidth="2" strokeColor="#B9B9B9" shadowColor="#FFFFFF" />
 						<mx:Label height="14" text="Last Synchronized: {dateFormatter.format(ModelLocator.getInstance().lastSynchronized)}" styleName="sync" />
@@ -83,7 +79,7 @@
 			<mx:RemoveChild target="{statusBar}"/>
 			<mx:AddChild relativeTo="{outerStatusBar}">
 				<mx:HBox id="statusBar2" verticalAlign="middle" height="100%" width="100%">
-					<mx:ProgressBar barColor="#0099FF" width="75" indeterminate="true" height="8" label=" "/>
+					<mx:ProgressBar barColor="#0099FF" width="75" indeterminate="true" height="8" label=" " />
 					<mx:VRule height="100%" strokeWidth="2" strokeColor="#B9B9B9" shadowColor="#FFFFFF" />
 					<mx:Label height="14" text="Synchronizing..." styleName="sync" />
 				</mx:HBox>
