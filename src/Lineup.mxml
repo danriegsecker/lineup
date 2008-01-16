@@ -53,6 +53,7 @@
 			import com.adobe.lineup.events.NotificationCheckEvent;
 			import com.adobe.lineup.events.InitEvent;
 			import com.adobe.lineup.events.InvocationEvent;
+			import com.adobe.lineup.events.UpdateIconsEvent;
 		
 			import com.adobe.lineup.controller.Controller;
 			import com.adobe.lineup.events.GetAppointmentsEvent;
@@ -88,7 +89,7 @@
 					});
 				this.appointmentUpdateTimer.start();
 
-				// Timer for caching appintments a month out
+				// Timer for caching appintments a month out, and refresh icons in case it's a new day.
 				this.appointmentCacheTimer = new Timer(30 * 60 * 1000); // Every 30 minutes
 				this.appointmentCacheTimer.addEventListener(TimerEvent.TIMER,
 					function(e:TimerEvent):void
@@ -98,6 +99,7 @@
 						gae.endDate = new Date(gae.startDate.time + (60 * 60 * 24 * 30 * 1000)); // One month
 						gae.updateUI = false;
 						gae.dispatch();
+						new UpdateIconsEvent().dispatch();
 					});
 				this.appointmentCacheTimer.start();
 
