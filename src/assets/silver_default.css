@@ -267,7 +267,7 @@ DateChooser {
     verticalGap: 5;
     weekDayStyleName: "header1";
     padingTop: 0;
-    
+ 
     nextMonthDisabledSkin: Embed(source="skins/DateChooser_nextMonthDisabledSkin.png");
     nextMonthDownSkin: Embed(source="skins/DateChooser_nextMonthDownSkin.png");
     nextMonthOverSkin: Embed(source="skins/DateChooser_nextMonthOverSkin.png");
@@ -299,36 +299,6 @@ DateChooser {
 		scaleGridLeft="5", scaleGridTop="5", scaleGridRight="18", scaleGridBottom="18");
 } 
     
-
-/*
-//------------------------------
-//  List
-//------------------------------
-*/
-
-
-
-
-/*
-//------------------------------
-//  RadioButton
-//------------------------------
-*/
-
-/*
-RadioButton {
-    textRollOverColor: #333333;
-    textSelectedColor: #333333;
-    disabledIcon: Embed(source="skins/RadioButton_disabledIcon.png");
-    downIcon: Embed(source="skins/RadioButton_downIcon.png");
-    overIcon: Embed(source="skins/RadioButton_overIcon.png");
-    selectedDisabledIcon: Embed(source="skins/RadioButtonSelected_disabledIcon.png");
-    selectedDownIcon: Embed(source="skins/RadioButtonSelected_downIcon.png");
-    selectedOverIcon: Embed(source="skins/RadioButtonSelected_overIcon.png");
-    selectedUpIcon: Embed(source="skins/RadioButtonSelected_upIcon.png");
-    upIcon: Embed(source="skins/RadioButton_upIcon.png");
-}
-*/
 
 /*
 //------------------------------
@@ -390,6 +360,6 @@ ScrollBar {
 	fontSize: 10;
 	fontWeight: normal;
 	color: #555555;
-	paddingTop: 0;
+	paddingTop: -1;
 }
 
