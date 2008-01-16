@@ -24,8 +24,8 @@
 		<!-- <maxSize></maxSize> -->
 	</initialWindow>
 
-	<!-- <installFolder></installFolder> -->
-	<!-- <programMenuFolder></programMenuFolder> -->
+	<installFolder>AIR Examples</installFolder>
+	<programMenuFolder>AIR Examples</programMenuFolder>
 
 	<!-- The icon the system uses for the application. For at least one resolution,
 		 specify the path to a PNG file included in the AIR package. Optional. -->
