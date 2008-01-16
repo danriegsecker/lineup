@@ -72,7 +72,6 @@ package com.adobe.lineup.commands
 								new Date(end.time + (end.timezoneOffset * 60000)));
 			// For testing purposes only
 			//this.populateFromDatabase(gae.startDate, gae.endDate);
-
 		}
 
 		private function populateFromDatabase(startDate:Date, endDate:Date):void
