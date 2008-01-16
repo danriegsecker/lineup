@@ -26,6 +26,7 @@ package com.adobe.lineup.controller
 			this.addCommand(NoAppointmentsFoundEvent.NO_APPOINTMENTS_FOUND_EVENT, NoAppointmentsFoundCommand);
 			this.addCommand(NotificationCheckEvent.NOTIFICATION_CHECK_EVENT, NotificationCheckCommand);
 			this.addCommand(OpenDetailsEvent.OPEN_DETAILS_EVENT, OpenDetailsCommand);
+			this.addCommand(UpdateIconsEvent.UPDATE_ICONS_EVENT, UpdateIconsCommand);
 		}
 		
 	}
