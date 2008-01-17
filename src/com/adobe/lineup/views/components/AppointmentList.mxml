@@ -38,7 +38,6 @@
 				{
 					switch (column) 
 					{
-						//case clmTime: result = timeFormatter.format(item.start) + " - " + timeFormatter.format(item.end); break;
 						case clmTime: result = timeFormatter.format(item.start); break;
 						case clmSubject: result = item.subject; break;
 					}
