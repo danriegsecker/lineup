@@ -144,6 +144,6 @@
 
 	</mx:VBox>
 
-	<pages:ServerInfoDrawer id="serverConfig" width="400" height="250"/>
+	<pages:ServerInfoDrawer id="serverConfig" width="400" height="200"/>
 
 </mx:WindowedApplication>
