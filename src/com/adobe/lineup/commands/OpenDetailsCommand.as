@@ -24,8 +24,8 @@ package com.adobe.lineup.commands
 			{
 				NativeWindow(NativeApplication.nativeApplication.openedWindows[i]).close();
 			}
+
 			var appBounds:Rectangle = NativeApplication.nativeApplication.openedWindows[0].bounds;
-			details.open(true);
 			var winX:uint = appBounds.x + ode.clickX;
 			var winY:uint = appBounds.y + ode.clickY - 40;
 			
@@ -33,6 +33,8 @@ package com.adobe.lineup.commands
 
 			var actualWidth:uint = currentScreen.bounds.width + currentScreen.bounds.x;			
 			var actualHeight:uint = currentScreen.bounds.height + currentScreen.bounds.y;			
+
+			details.open(true);
 			
 			if ((winX + details.width) >= actualWidth)
 			{
