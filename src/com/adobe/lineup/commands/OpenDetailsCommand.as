@@ -9,6 +9,7 @@ package com.adobe.lineup.commands
 	import flash.desktop.NativeApplication;
 	import flash.display.NativeWindow;
 	import flash.display.Screen;
+	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
 	public class OpenDetailsCommand implements ICommand
@@ -25,9 +26,14 @@ package com.adobe.lineup.commands
 				NativeWindow(NativeApplication.nativeApplication.openedWindows[i]).close();
 			}
 
-			var appBounds:Rectangle = NativeApplication.nativeApplication.openedWindows[0].bounds;
-			var winX:uint = appBounds.x + ode.clickX;
-			var winY:uint = appBounds.y + ode.clickY - 40;
+			var win:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
+
+			var appBounds:Rectangle = win.bounds;
+			
+			var adjustedPoint:Point = win.globalToScreen(new Point(ode.clickX, ode.clickY));
+
+			var winX:uint = adjustedPoint.x;
+			var winY:uint = adjustedPoint.y - 60;
 			
 			var currentScreen:Screen = Screen.getScreensForRectangle(appBounds).pop();
 
