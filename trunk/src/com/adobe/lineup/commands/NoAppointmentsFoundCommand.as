@@ -14,11 +14,11 @@ package com.adobe.lineup.commands
 			var message:String;
 			if (ModelLocator.getInstance().online)
 			{
-				message = "No appointments were found for the specified date range.";
+				message = "No appointments were found for the specified date.";
 			}
 			else
 			{
-				message = "No cached appointments were found for the specified date range. If possible, connect to the network and try again.";
+				message = "No cached appointments were found for the specified date. If possible, connect to the network and try again.";
 			}
 			NativeAlert.show(message, "No Appointments Found", NativeAlert.OK, true, NativeApplication.nativeApplication.openedWindows[0], null, ModelLocator.getInstance().alertIcon);
 		}

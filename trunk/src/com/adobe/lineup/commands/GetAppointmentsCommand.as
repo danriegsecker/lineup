@@ -6,6 +6,7 @@ package com.adobe.lineup.commands
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
+	import com.adobe.lineup.events.NoAppointmentsFoundEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
 	
@@ -13,7 +14,9 @@ package com.adobe.lineup.commands
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
 	import flash.events.IOErrorEvent;
+	import flash.net.URLRequest;
 	import flash.net.URLRequestDefaults;
+	import flash.net.navigateToURL;
 	
 	import mx.collections.ArrayCollection;
 	
@@ -85,6 +88,7 @@ package com.adobe.lineup.commands
 
 			if (appointments == null || appointments.length == 0)
 			{
+				new NoAppointmentsFoundEvent().dispatch();
 				return;
 			}
 
@@ -105,6 +109,7 @@ package com.adobe.lineup.commands
 			}
 			newAppts.source.sortOn("start", Array.NUMERIC);
 			ml.appointments = newAppts;
+			refreshIconMenu();
 		}
 		
 		private function refreshIconMenu():void
@@ -118,7 +123,10 @@ package com.adobe.lineup.commands
 				menuItem.addEventListener(Event.SELECT,
 					function(e:Event):void
 					{
-						ModelLocator.getInstance().selectedAppointment = NativeMenuItem(e.target).data as CalendarEntry;
+						if (e.target.data.url != null)
+						{
+							navigateToURL(new URLRequest(e.target.data.url));
+						}
 					});
 				iconMenu.addItem(menuItem);
 			}
