@@ -10,7 +10,7 @@ package com.adobe.lineup.commands
 		{
 			var ml:ModelLocator = ModelLocator.getInstance();
 			ml.db.removeAlerts();
-			ml.db.shutdown();
+			ml.db.shutdown();			
 		}
 	}
 }
