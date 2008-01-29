@@ -16,8 +16,11 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.events.PropertyChangeEvent;
 			import com.adobe.lineup.vo.CalendarEntry;
 			import mx.formatters.DateFormatter;
+			import mx.binding.utils.ChangeWatcher;
+			import com.adobe.lineup.model.ModelLocator;
 			
 			[Bindable] private var _entry:CalendarEntry;
 			private var dateFormatter:DateFormatter;
@@ -49,7 +52,6 @@
 				
 				// Listen for main window resizes
 				var mainWindow:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
-				mainWindow.addEventListener(NativeWindowBoundsEvent.MOVING, onMainWindowMove);
 				mainWindow.addEventListener(NativeWindowBoundsEvent.MOVE, onMainWindowMove);
 				
 				// Listen for activation and deactivation
@@ -59,6 +61,8 @@
 				this.nativeWindow.addEventListener(Event.CLOSE, onClose);
 				
 				htmlDescription.htmlLoader.navigateInSystemBrowser = true;
+				
+				ChangeWatcher.watch(ModelLocator.getInstance(), "scheduleScrollPosition", onScheduleScrolled);
 			}
 			
 			private function doDrag(e:MouseEvent):void
@@ -73,22 +77,21 @@
 			
 			public function onMainWindowMove(e:NativeWindowBoundsEvent):void
 			{
-				if (arrowBox.styleName == 'detailWindow')
-				{
-					arrowBox.styleName = "detailWindowNoArrow";
-				}
-
-				/* Code to make the detail window follow the main window.  Too buggy...
-				if (e.beforeBounds.x == e.afterBounds.x && e.beforeBounds.y == e.afterBounds.y)
+				if (arrowBox.styleName == 'detailWindowNoArrow')
 				{
 					return;
 				}
-				var newBounds:Rectangle = new Rectangle(this.nativeWindow.bounds.x + (e.afterBounds.x - e.beforeBounds.x),
-														this.nativeWindow.bounds.y + (e.afterBounds.y - e.beforeBounds.y),
-														this.nativeWindow.bounds.width,
-														this.nativeWindow.bounds.height);
-				this.nativeWindow.bounds = newBounds;
-				*/
+
+				this.nativeWindow.x += (e.afterBounds.x - e.beforeBounds.x);
+				this.nativeWindow.y += (e.afterBounds.y - e.beforeBounds.y);
+			}
+			
+			private function onScheduleScrolled(e:PropertyChangeEvent):void
+			{
+				if (arrowBox.styleName != 'detailWindowNoArrow')
+				{
+					arrowBox.styleName = 'detailWindowNoArrow';
+				}
 			}
 			
 			private function onDeactivate(e:Event):void
@@ -104,7 +107,6 @@
 			private function onClose(e:Event = null):void
 			{
 				var mainWindow:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
-				mainWindow.removeEventListener(NativeWindowBoundsEvent.MOVING, onMainWindowMove);
 				mainWindow.removeEventListener(NativeWindowBoundsEvent.MOVE, onMainWindowMove);
 				NativeApplication.nativeApplication.removeEventListener(Event.ACTIVATE, onActivate);
 				NativeApplication.nativeApplication.removeEventListener(Event.DEACTIVATE, onDeactivate);
