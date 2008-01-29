@@ -27,6 +27,7 @@ package com.adobe.lineup.model
 		[Bindable] public var nextAppointment:CalendarEntry;
 		[Bindable] public var busy:Boolean;
 		[Bindable] public var lastSynchronized:Date;
+		[Bindable] public var scheduleScrollPosition:Number;
 		
 		[Embed(source="assets/application.png")]
 		public var appIconClass:Class;
