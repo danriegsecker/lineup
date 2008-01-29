@@ -7,6 +7,7 @@
 
 	<mx:Script>
         <![CDATA[
+        	import mx.events.ScrollEvent;
         	import mx.containers.VBox;
 
 			import com.adobe.lineup.model.ModelLocator;
@@ -146,19 +147,24 @@
 				return false;
 			}
             
+            private function onScroll(e:ScrollEvent):void
+            {
+				ModelLocator.getInstance().scheduleScrollPosition = e.position;
+            }
+            
         ]]>
     </mx:Script>
     
 
 	<mx:VBox id="mainEventContainer" width="100%" height="100%" verticalScrollPolicy="off" horizontalScrollPolicy="off" verticalGap="0">
 
-		<mx:Canvas id="timedEvents" width="100%" height="100%" verticalScrollPolicy="on" horizontalScrollPolicy="off">
+		<mx:Canvas id="timedEvents" width="100%" height="100%" verticalScrollPolicy="on" horizontalScrollPolicy="off" scroll="onScroll(event);">
 		    <!-- Non Business Hours -->
 		    <mx:Box width="100%" height="480" backgroundColor="#EFEFEF"/>
 		    <mx:Box y="1120" width="100%" height="415" backgroundColor="#EFEFEF"/>
 			
 			<!-- Left side Time Labels -->
-			<mx:VBox width="100%" height="100%" x="0" y="0" horizontalAlign="left" verticalGap="4" horizontalScrollPolicy="off" verticalScrollPolicy="auto" >
+			<mx:VBox width="100%" height="100%" x="0" y="0" horizontalAlign="left" verticalGap="4" horizontalScrollPolicy="off" verticalScrollPolicy="auto">
 				
 				<comps:TimeLabel timeofday="1" ampm="AM" />
 				<comps:TimeLabel timeofday="2" ampm="AM" />
