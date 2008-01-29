@@ -129,6 +129,20 @@
 						new ShutdownEvent().dispatch();
 					});
 				
+				// Manage window and application closing.
+				this.nativeWindow.addEventListener(Event.CLOSING,
+					function(e:Event):void
+					{
+						e.preventDefault();
+						for (var i:int = NativeApplication.nativeApplication.openedWindows.length - 1; i >= 0; --i)
+						{
+							NativeWindow(NativeApplication.nativeApplication.openedWindows[i]).close();
+						}
+					});
+				
+				var initialBounds:Rectangle = new Rectangle((Screen.mainScreen.bounds.width / 2 - 400), (Screen.mainScreen.bounds.height / 2 - 300), 800, 600);
+				this.nativeWindow.bounds = initialBounds;
+				
 				new InitEvent().dispatch();
 			}
 		]]>
