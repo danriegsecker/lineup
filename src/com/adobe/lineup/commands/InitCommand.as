@@ -10,17 +10,16 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.events.UpdateIconsEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.ServerInfo;
+	
 	import flash.desktop.NativeApplication;
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
+	import flash.desktop.SystemTrayIcon;
+	import flash.display.NativeWindow;
+	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
 	import flash.filesystem.FileStream;
-	import flash.geom.Point;
-	import flash.geom.Rectangle;
-	import flash.events.MouseEvent;
+	
 	import mx.collections.ArrayCollection;
-	import flash.desktop.SystemTrayIcon;
 	
 	public class InitCommand implements ICommand
 	{
@@ -64,7 +63,7 @@ package com.adobe.lineup.commands
 			ml.serverInfo.exchangeUsername = (pref.getValue("exchangeUsername") == null) ? "" : pref.getValue("exchangeUsername");
 			ml.serverInfo.exchangePassword = (pref.getValue("exchangePassword") == null) ? "" : pref.getValue("exchangePassword");
 			ml.serverInfo.useHttps = (pref.getValue("useHttps") == null) ? true : pref.getValue("useHttps");
-			
+						
 			if (ml.serverInfo.exchangeServer == "" || ml.serverInfo.exchangeUsername == "")
 			{
 				ml.serverConfigOpen = true;
