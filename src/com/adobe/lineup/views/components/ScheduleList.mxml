@@ -31,11 +31,8 @@
 
 			private function onEventsChange(e:PropertyChangeEvent):void
 			{
-				for each (var eventMod:NewEventModule in this.newEvents)
-				{
-					eventBucket.removeChild(eventMod);
-				}
-				
+				eventBucket.removeAllChildren();
+
 				if (allDayEventBucket != null)
 				{
 					mainEventContainer.removeChild(this.allDayEventBucket);
@@ -55,7 +52,6 @@
 						{
 							allDayEventBucket = new VBox();
 							allDayEventBucket.percentWidth = 100;
-							//allDayEventBucket.height = 20;
 							allDayEventBucket.horizontalScrollPolicy = "off";
 							allDayEventBucket.verticalScrollPolicy = "off";
 							allDayEventBucket.setStyle("verticalGap", 0);
