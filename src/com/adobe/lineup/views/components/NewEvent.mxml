@@ -30,7 +30,7 @@
 		</mx:filters>
     </mx:Label>
     
-    <mx:Text styleName="today" text="{myEventTitle}" paddingTop="0" width="100%">
+    <mx:Text styleName="today" text="{myEventTitle}" paddingTop="0" width="100%" selectable="false">
     	<mx:filters>
 			<flash.filters:DropShadowFilter quality="4" distance="1" angle="90" blurX="2" blurY="2" color="0x000000" alpha="0.65" />
 		</mx:filters>
