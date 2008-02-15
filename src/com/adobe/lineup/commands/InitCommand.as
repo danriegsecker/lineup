@@ -59,12 +59,15 @@ package com.adobe.lineup.commands
 			var pref:Preference = new Preference();
 			pref.load();
 			ml.serverInfo = new ServerInfo();
-			ml.serverInfo.exchangeServer = (pref.getValue("exchangeServer") == null) ? "" : pref.getValue("exchangeServer");
-			ml.serverInfo.exchangeUsername = (pref.getValue("exchangeUsername") == null) ? "" : pref.getValue("exchangeUsername");
-			ml.serverInfo.exchangePassword = (pref.getValue("exchangePassword") == null) ? "" : pref.getValue("exchangePassword");
+
+			ml.serverInfo.exchangeServer = pref.getValue("exchangeServer");
+			ml.serverInfo.exchangeDomain = pref.getValue("exchangeDomain");
+			ml.serverInfo.exchangeUsername = pref.getValue("exchangeUsername");
+			ml.serverInfo.exchangePassword = pref.getValue("exchangePassword");
+
 			ml.serverInfo.useHttps = (pref.getValue("useHttps") == null) ? true : pref.getValue("useHttps");
 						
-			if (ml.serverInfo.exchangeServer == "" || ml.serverInfo.exchangeUsername == "")
+			if (ml.serverInfo.exchangeServer == null || ml.serverInfo.exchangeUsername == null)
 			{
 				ml.serverConfigOpen = true;
 			}
