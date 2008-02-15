@@ -32,6 +32,7 @@
 			private function onEventsChange(e:PropertyChangeEvent):void
 			{
 				eventBucket.removeAllChildren();
+				System.gc();
 
 				if (allDayEventBucket != null)
 				{
