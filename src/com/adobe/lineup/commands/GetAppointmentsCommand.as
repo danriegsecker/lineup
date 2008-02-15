@@ -5,11 +5,15 @@ package com.adobe.lineup.commands
 	import com.adobe.exchange.Calendar;
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
+	import com.adobe.exchange.events.FBAAuthenticatedEvent;
+	import com.adobe.exchange.events.FBAAuthenticationFailedEvent;
+	import com.adobe.exchange.events.FBAChallengeEvent;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
-	import com.adobe.lineup.events.NoAppointmentsFoundEvent;
+	import com.adobe.lineup.events.ShowAlertEvent;
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
 	
+	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
@@ -27,12 +31,20 @@ package com.adobe.lineup.commands
 			var gae:GetAppointmentsEvent = GetAppointmentsEvent(e);
 			var ml:ModelLocator = ModelLocator.getInstance();
 
+			var start:Date = gae.startDate;
+			var end:Date = gae.endDate;
+			end = new Date(end.time + (60*60*24*1000));
+			start = new Date(start.time + (start.timezoneOffset * 60000) - (60*1000));
+			end = new Date(end.time + (end.timezoneOffset * 60000));
+
 			ml.busy = true;
 
 			URLRequestDefaults.setLoginCredentialsForHost(ml.serverInfo.exchangeServer, ml.serverInfo.exchangeUsername, ml.serverInfo.exchangePassword);
 
 			var rc:RequestConfig = new RequestConfig();
 			rc.username = ml.serverInfo.exchangeUsername;
+			rc.password = ml.serverInfo.exchangePassword;
+			rc.domain = ml.serverInfo.exchangeDomain;
 			rc.server = ml.serverInfo.exchangeServer;
 			rc.secure = ml.serverInfo.useHttps;
 			
@@ -47,6 +59,31 @@ package com.adobe.lineup.commands
 						populateFromDatabase(gae.startDate, gae.endDate);
 					}
 				});
+
+			cal.addEventListener(FBAChallengeEvent.FBA_CHALLENGE_EVENT,
+				function(fce:FBAChallengeEvent):void
+				{
+					cal.fba();
+				});
+
+			cal.addEventListener(FBAAuthenticatedEvent.FBA_AUTHENTICATED_EVENT,
+				function(fae:FBAAuthenticatedEvent):void
+				{
+					cal.getAppointments(start, end);
+				});
+
+			cal.addEventListener(FBAAuthenticationFailedEvent.FBA_AUTHENTICATION_FAILED_EVENT,
+				function(fafe:FBAAuthenticationFailedEvent):void
+				{
+					var sae:ShowAlertEvent = new ShowAlertEvent();
+					sae.title = "Authentication Failed";
+					sae.message = "Unable to authenticate using forms-base authentication. Please check your Exchange information.";
+					sae.dispatch();
+					ModelLocator.getInstance().busy = false;
+					ModelLocator.getInstance().online = false;
+					ModelLocator.getInstance().serverConfigOpen = true;
+				});
+
 			cal.addEventListener(ExchangeAppointmentListEvent.EXCHANGE_APPOINTMENT_LIST_EVENT,
 				function onAppointmentList(exchangeEvent:ExchangeAppointmentListEvent):void
 				{
@@ -68,11 +105,7 @@ package com.adobe.lineup.commands
 						ml.busy = false;
 					}
 				});
-			var start:Date = gae.startDate;
-			var end:Date = gae.endDate;
-			end = new Date(end.time + (60*60*24*1000));
-			cal.getAppointments(new Date(start.time + (start.timezoneOffset * 60000) - (60*1000)),
-								new Date(end.time + (end.timezoneOffset * 60000)));
+			cal.getAppointments(start, end);
 			// For testing purposes only
 			//this.populateFromDatabase(gae.startDate, gae.endDate);
 		}
@@ -88,7 +121,13 @@ package com.adobe.lineup.commands
 
 			if (appointments == null || appointments.length == 0)
 			{
-				new NoAppointmentsFoundEvent().dispatch();
+				if (!ModelLocator.getInstance().online)
+				{
+					var sae:ShowAlertEvent = new ShowAlertEvent();
+					sae.title = "No Appointments Found";
+					sae.message = "No cached appointments were found. If possible, please connect to the network and try again.";
+					sae.dispatch();
+				}
 				return;
 			}
 
