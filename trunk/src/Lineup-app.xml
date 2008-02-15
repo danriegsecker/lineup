@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://ns.adobe.com/air/application/1.0">
 	<name>Lineup</name>
-	<id>Lineup</id>
+	<id>com.adobe.lineup</id>
 	<filename>Lineup</filename>
 	<version>v1</version>
 	<description>A cross-platform Exchange calendaring application. Written by Christian Cantrell and Prabhakar Shenoy.</description>
