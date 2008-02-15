@@ -23,7 +23,7 @@ package com.adobe.lineup.controller
 			this.addCommand(GetAppointmentsEvent.GET_APPOINTMENTS_EVENT, GetAppointmentsCommand);
 			this.addCommand(SaveServerConfigEvent.SAVE_SERVER_CONFIG_EVENT, SaveServerConfigCommand);
 			this.addCommand(StartServerMonitorEvent.START_SERVER_MONITOR_EVENT, StartServerMonitorCommand);
-			this.addCommand(NoAppointmentsFoundEvent.NO_APPOINTMENTS_FOUND_EVENT, NoAppointmentsFoundCommand);
+			this.addCommand(ShowAlertEvent.SHOW_ALERT_EVENT, ShowAlertCommand);
 			this.addCommand(NotificationCheckEvent.NOTIFICATION_CHECK_EVENT, NotificationCheckCommand);
 			this.addCommand(OpenDetailsEvent.OPEN_DETAILS_EVENT, OpenDetailsCommand);
 			this.addCommand(UpdateIconsEvent.UPDATE_ICONS_EVENT, UpdateIconsCommand);
