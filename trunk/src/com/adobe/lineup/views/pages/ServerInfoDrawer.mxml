@@ -9,6 +9,7 @@
 			{
 				var ssce:SaveServerConfigEvent = new SaveServerConfigEvent();
 				ssce.exchangeServer = exchangeServerInput.text;
+				ssce.exchangeDomain = (exchangeDomainInput.text.length > 0) ? exchangeDomainInput.text : null;
 				ssce.exchangeUsername = exchangeUsernameInput.text;
 				ssce.exchangePassword = exchangePasswordInput.text;
 				ssce.useHttps = useHttps.selected;
@@ -20,6 +21,9 @@
 		<mx:Form>
 			<mx:FormItem label="Exchange Server">
 				<mx:TextInput id="exchangeServerInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangeServer}"/>
+			</mx:FormItem>
+			<mx:FormItem label="Domain">
+				<mx:TextInput id="exchangeDomainInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangeDomain}"/>
 			</mx:FormItem>
 			<mx:FormItem label="Exchange Username">
 				<mx:TextInput id="exchangeUsernameInput" width="175" text="{ModelLocator.getInstance().serverInfo.exchangeUsername}"/>
