@@ -18,6 +18,7 @@ package com.adobe.lineup.commands
 			var pref:Preference = new Preference();
 			pref.load();
 			pref.setValue("exchangeServer", ssce.exchangeServer);
+			pref.setValue("exchangeDomain", ssce.exchangeDomain);
 			pref.setValue("exchangeUsername", ssce.exchangeUsername);
 			pref.setValue("exchangePassword", ssce.exchangePassword, true);
 			pref.setValue("useHttps", ssce.useHttps);
@@ -25,6 +26,7 @@ package com.adobe.lineup.commands
 
 			var ml:ModelLocator = ModelLocator.getInstance();
 			ml.serverInfo.exchangeServer = ssce.exchangeServer;
+			ml.serverInfo.exchangeDomain = ssce.exchangeDomain;
 			ml.serverInfo.exchangeUsername = ssce.exchangeUsername;
 			ml.serverInfo.exchangePassword = ssce.exchangePassword;
 			ml.serverInfo.useHttps = ssce.useHttps;
@@ -34,8 +36,8 @@ package com.adobe.lineup.commands
 			ssme.dispatch();
 
 			var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
-			gae.startDate = new Date();
-			gae.endDate = new Date();
+			gae.startDate = ModelLocator.getInstance().selectedDate;
+			gae.endDate = ModelLocator.getInstance().selectedDate;
 			gae.updateUI = true;
 			gae.dispatch();
 		}
