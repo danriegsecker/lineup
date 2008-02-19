@@ -27,28 +27,8 @@
 	<installFolder>AIR Examples</installFolder>
 	<programMenuFolder>AIR Examples</programMenuFolder>
 
-	<!-- The icon the system uses for the application. For at least one resolution,
-		 specify the path to a PNG file included in the AIR package. Optional. -->
 	<icon>
 		<image128x128>assets/application_128x128.png</image128x128>
 	</icon>
-
-	<!-- <customUpdateUI></customUpdateUI> -->
-	<!-- <allowBrowserInvocation></allowBrowserInvocation> -->
-
-	<!-- <fileTypes> -->
-		<!-- <fileType> -->
-			<!-- <name></name> -->
-			<!-- <extension></extension> -->
-			<!-- <description></description> -->
-			<!-- <contentType></contentType> -->
-			<!-- <icon>
-				<image16x16></image16x16>
-				<image32x32></image32x32>
-				<image48x48></image48x48>
-				<image128x128></image128x128>
-			</icon> -->
-		<!-- </fileType> -->
-	<!-- </fileTypes> -->
 
 </application>
