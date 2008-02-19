@@ -20,6 +20,7 @@ package com.adobe.lineup.commands
 			var event:CalendarEntry = ode.event;
 			var details:AppointmentDetails = new AppointmentDetails();
 			details.entry = event;
+
 			// Close any windows that are already open
 			for (var i:uint = 1; i < NativeApplication.nativeApplication.openedWindows.length; ++i)
 			{
@@ -38,7 +39,6 @@ package com.adobe.lineup.commands
 			var currentScreen:Screen = Screen.getScreensForRectangle(appBounds).pop();
 
 			var actualWidth:uint = currentScreen.bounds.width + currentScreen.bounds.x;			
-			var actualHeight:uint = currentScreen.bounds.height + currentScreen.bounds.y;			
 
 			details.open(true);
 			
@@ -47,7 +47,7 @@ package com.adobe.lineup.commands
 				winX = actualWidth - details.width;
 			}
 			
-			var newBounds:Rectangle = new Rectangle(winX, winY, appBounds.width, appBounds.height);
+			var newBounds:Rectangle = new Rectangle(winX, winY, details.width, details.height);
 			details.nativeWindow.bounds = newBounds;
 		}
 	}
