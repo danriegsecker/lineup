@@ -15,7 +15,7 @@ package com.adobe.lineup.commands
 			var win:NativeWindow = NativeWindow(NativeApplication.nativeApplication.openedWindows[0]);
 			if (win.displayState == NativeWindowDisplayState.MINIMIZED)
 			{
-				win.maximize();
+				win.restore();
 			}
 		}
 	}
