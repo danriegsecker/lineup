@@ -155,6 +155,8 @@
 		<pages:ViewSchedule label="View Schedule" width="100%" height="100%"/>
 
 		<comps:ControlBar width="100%"/>
+		
+		<mx:Button label="Create Test Mtg"/>
 
 	</mx:VBox>
 
