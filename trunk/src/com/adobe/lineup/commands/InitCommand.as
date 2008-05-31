@@ -4,6 +4,7 @@ package com.adobe.lineup.commands
 	import com.adobe.air.preferences.Preference;
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.adobe.exchange.RequestConfig;
 	import com.adobe.lineup.database.Database;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
 	import com.adobe.lineup.events.StartServerMonitorEvent;
@@ -13,7 +14,6 @@ package com.adobe.lineup.commands
 	
 	import flash.desktop.NativeApplication;
 	import flash.desktop.SystemTrayIcon;
-	import flash.display.NativeWindow;
 	import flash.events.MouseEvent;
 	import flash.filesystem.File;
 	import flash.filesystem.FileMode;
@@ -64,9 +64,13 @@ package com.adobe.lineup.commands
 			ml.serverInfo.exchangeDomain = pref.getValue("exchangeDomain");
 			ml.serverInfo.exchangeUsername = pref.getValue("exchangeUsername");
 			ml.serverInfo.exchangePassword = pref.getValue("exchangePassword");
-
 			ml.serverInfo.useHttps = (pref.getValue("useHttps") == null) ? true : pref.getValue("useHttps");
-						
+			
+			ml.requestConfig = new RequestConfig();
+			ml.requestConfig.secure = ml.serverInfo.useHttps;
+			ml.requestConfig.server = ml.serverInfo.exchangeServer;
+			ml.requestConfig.username = ml.serverInfo.exchangeUsername;
+					
 			if (ml.serverInfo.exchangeServer == null || ml.serverInfo.exchangeUsername == null)
 			{
 				ml.serverConfigOpen = true;
@@ -84,6 +88,8 @@ package com.adobe.lineup.commands
 				gae.updateUI = true;
 				gae.dispatch();
 			}
+			
+			ml.initialized = true;
 		}
 	}
 }

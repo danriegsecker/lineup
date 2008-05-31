@@ -6,6 +6,7 @@ package com.adobe.lineup.model
 	
 	import com.adobe.air.notification.Purr;
 	import com.adobe.cairngorm.model.IModelLocator;
+	import com.adobe.exchange.RequestConfig;
 	import com.adobe.lineup.database.Database;
 	import com.adobe.lineup.vo.CalendarEntry;
 	import com.adobe.lineup.vo.ServerInfo;
@@ -21,6 +22,8 @@ package com.adobe.lineup.model
 		[Bindable] public var selectedDate:Date;
 		[Bindable] public var appointments:ArrayCollection;
 		[Bindable] public var serverInfo:ServerInfo;
+		[Bindable] public var serverConfig:ServerInfo;
+		[Bindable] public var requestConfig:RequestConfig;
 		[Bindable] public var serverConfigOpen:Boolean;
 		[Bindable] public var online:Boolean;
 		[Bindable] public var selectedAppointment:CalendarEntry;
@@ -43,6 +46,8 @@ package com.adobe.lineup.model
 		public var db:Database;
 		public var serverMonitor:ServiceMonitor;
 		public var purr:Purr;
+		
+		[Bindable] public var initialized:Boolean;
 		
 		public function ModelLocator()
 		{
