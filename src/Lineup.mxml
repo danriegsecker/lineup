@@ -38,7 +38,7 @@
 
 <mx:WindowedApplication
 	layout="absolute" showStatusBar="false"
-	creationComplete="onCreationComplete();"
+	creationComplete="onCreationComplete()"
 	xmlns:mx="http://www.adobe.com/2006/mxml"
 	xmlns:pages="com.adobe.lineup.views.pages.*"
 	xmlns:comps="com.adobe.lineup.views.components.*">
@@ -47,6 +47,8 @@
 
 	<mx:Script>
 		<![CDATA[
+			import mx.binding.utils.ChangeWatcher;
+			import com.adobe.lineup.events.CreateAppointmentEvent;
 			import com.adobe.lineup.events.BoundsChangeEvent;
 			import com.adobe.lineup.events.ActivateEvent;
 			import com.adobe.lineup.events.ShutdownEvent;
@@ -60,13 +62,19 @@
 			import com.adobe.lineup.model.ModelLocator;
 			
 			private var controller:Controller;
+			private var services:Services;
 			private var notificationTimer:Timer;
 			private var appointmentUpdateTimer:Timer;
 			private var appointmentCacheTimer:Timer;
+			private var ml:ModelLocator = ModelLocator.getInstance();
 			
 			private function onCreationComplete():void
 			{
 				this.controller = new Controller();
+				this.services = new Services();
+				
+				ChangeWatcher.watch(ml, "initialized", onInitialize);
+				
 				// Set up the notification timer
 				this.notificationTimer = new Timer(60 * 1000); // Every minute
 				this.notificationTimer.addEventListener(TimerEvent.TIMER,
@@ -145,9 +153,14 @@
 				
 				new InitEvent().dispatch();
 			}
+			
+			private function onInitialize(event:Event):void
+			{
+				services.initialize(ml.requestConfig);
+			}
 		]]>
 	</mx:Script>
-
+	
 	<mx:VBox width="100%" height="100%" horizontalAlign="center" verticalGap="0">
 
 		<mx:HRule width="100%" strokeWidth="2" strokeColor="#B9B9B9" shadowColor="#FFFFFF"/>
@@ -156,7 +169,7 @@
 
 		<comps:ControlBar width="100%"/>
 		
-		<mx:Button label="Create Test Mtg"/>
+		<mx:Button label="Create Test Mtg" click="new CreateAppointmentEvent().dispatch()"/>
 
 	</mx:VBox>
 
