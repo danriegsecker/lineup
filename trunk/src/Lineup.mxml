@@ -62,7 +62,6 @@
 			import com.adobe.lineup.model.ModelLocator;
 			
 			private var controller:Controller;
-			private var services:Services;
 			private var notificationTimer:Timer;
 			private var appointmentUpdateTimer:Timer;
 			private var appointmentCacheTimer:Timer;
@@ -71,7 +70,6 @@
 			private function onCreationComplete():void
 			{
 				this.controller = new Controller();
-				this.services = new Services();
 				
 				ChangeWatcher.watch(ml, "initialized", onInitialize);
 				
@@ -156,7 +154,7 @@
 			
 			private function onInitialize(event:Event):void
 			{
-				services.initialize(ml.requestConfig);
+				
 			}
 		]]>
 	</mx:Script>
