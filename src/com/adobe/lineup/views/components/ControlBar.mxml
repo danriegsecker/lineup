@@ -2,6 +2,7 @@
 <mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" currentState="notBusy" creationComplete="onCreationComplete();">
 	<mx:Script>
 		<![CDATA[
+			import com.adobe.lineup.views.pages.ContactsWindow;
 			import com.adobe.lineup.model.ModelLocator;
 			import mx.binding.utils.ChangeWatcher;
 			import mx.events.PropertyChangeEvent;
@@ -15,6 +16,10 @@
 			[Bindable]
 			[Embed(source="assets/sync/sync.swf", symbol="icon_offline")]
 			public var offlineIconClass:Class;
+
+			[Bindable]
+			[Embed(source="assets/contacts.png")]
+			public var contactsIconClass:Class;
 
 			[Bindable] private var dateFormatter:DateFormatter;
 
@@ -34,6 +39,12 @@
 			private function formatDate(d:Date):String
 			{
 				return (d == null) ? "Unknown" : dateFormatter.format(d);
+			}
+			
+			private function openContactsWindow():void
+			{
+				var cWin:ContactsWindow = new ContactsWindow();
+				cWin.open();
 			}
 
 		]]>
@@ -67,13 +78,12 @@
 						 paddingLeft="4"
 						 paddingTop="2">
 					
-					<mx:HBox id="statusBar" verticalAlign="middle" height="100%" click="ModelLocator.getInstance().serverConfigOpen = true">
-						<mx:Image id="statusIcon" source="{(ModelLocator.getInstance().online) ? onlineIconClass : offlineIconClass}"/>
-						<mx:Label id="statusLabel" height="14" text="{(ModelLocator.getInstance().online) ? 'Connected' : 'Disconnected'}" styleName="sync" />
+					<mx:HBox id="statusBar" verticalAlign="middle" height="100%" width="100%">
+						<mx:Image id="statusIcon" source="{(ModelLocator.getInstance().online) ? onlineIconClass : offlineIconClass}" click="ModelLocator.getInstance().serverConfigOpen = true"/>
+						<mx:Label id="statusLabel" height="14" text="{(ModelLocator.getInstance().online) ? 'Connected' : 'Disconnected'}" styleName="sync" click="ModelLocator.getInstance().serverConfigOpen = true"/>
 						<mx:VRule height="100%" strokeWidth="2" strokeColor="#B9B9B9" shadowColor="#FFFFFF" />
-						<mx:Label height="14" text="Last Synchronized: {formatDate(ModelLocator.getInstance().lastSynchronized)}" styleName="sync" />
+						<mx:Label height="14" text="Last Synchronized: {formatDate(ModelLocator.getInstance().lastSynchronized)}" styleName="sync" click="ModelLocator.getInstance().serverConfigOpen = true"/>
 					</mx:HBox>
-
 				</mx:HBox>
 			</mx:AddChild>
 
@@ -91,5 +101,5 @@
 		</mx:State>
 
 	</mx:states>
-
+	<mx:Image id="contactsIcon" source="{contactsIconClass}" right="12" bottom="0" click="openContactsWindow();"/>
 </mx:Canvas>

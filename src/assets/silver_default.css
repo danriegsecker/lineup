@@ -26,7 +26,6 @@ WindowedApplication {
     verticalAlign: top;
     horizontalGap: 0;
     verticalGap: 0;
-
 }
 
 /*
@@ -128,6 +127,21 @@ CheckBox {
 	backgroundSize: "100%";
 }
 
+.contactDetailForm {
+	backgroundColor: #E9E9E9;
+	color: #555555;
+	font-family: "Arial";
+	font-size: 12;
+	font-anti-alias-type:advanced;
+}
+
+.contactTree {
+	backgroundColor: #F4F4F4;
+	color: #555555;
+	font-family: "Arial";
+	font-size: 12;
+	font-anti-alias-type:advanced;
+}
 
 .componentContainer {
 	borderSides: bottom;

@@ -3,6 +3,7 @@ package com.adobe.lineup.commands
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
 	import com.adobe.exchange.Calendar;
+	import com.adobe.exchange.AddressBook;
 	import com.adobe.exchange.RequestConfig;
 	import com.adobe.exchange.events.ExchangeAppointmentListEvent;
 	import com.adobe.exchange.events.FBAAuthenticatedEvent;
@@ -13,7 +14,6 @@ package com.adobe.lineup.commands
 	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.vo.CalendarEntry;
 	
-	import flash.desktop.NativeApplication;
 	import flash.display.NativeMenu;
 	import flash.display.NativeMenuItem;
 	import flash.events.Event;
@@ -41,15 +41,8 @@ package com.adobe.lineup.commands
 
 			URLRequestDefaults.setLoginCredentialsForHost(ml.serverInfo.exchangeServer, ml.serverInfo.exchangeUsername, ml.serverInfo.exchangePassword);
 
-			var rc:RequestConfig = new RequestConfig();
-			rc.username = ml.serverInfo.exchangeUsername;
-			rc.password = ml.serverInfo.exchangePassword;
-			rc.domain = ml.serverInfo.exchangeDomain;
-			rc.server = ml.serverInfo.exchangeServer;
-			rc.secure = ml.serverInfo.useHttps;
-			
 			var cal:Calendar = new Calendar();
-			cal.requestConfig = rc;
+			cal.requestConfig = ml.requestConfig;
 			cal.addEventListener(IOErrorEvent.IO_ERROR,
 				function(e:IOErrorEvent):void
 				{
