@@ -60,7 +60,18 @@
 					o.href = entry.href;
 					if (!entry.isFolder && person != null)
 					{
-						o.label = person.fullName;
+						if (person.fullName != null)
+						{
+							o.label = person.fullName;
+						}
+						else if (person.organization != null)
+						{
+							o.label = person.organization;
+						}
+						else
+						{
+							continue;
+						}
 						o.data = person;
 					}
 					else
@@ -179,7 +190,7 @@
 					<mx:Label text="Home Address" fontWeight="bold" color="#555555"/>
 				</mx:GridItem>
 				<mx:GridItem>
-					<mx:TextArea id="homeAddress" height="60" width="100%" editable="false"/>
+					<mx:TextArea id="homeAddress" height="60" width="200" editable="false"/>
 				</mx:GridItem>
 			</mx:GridRow>
 			<mx:GridRow>
@@ -187,7 +198,7 @@
 					<mx:Label text="Work Address" fontWeight="bold" color="#555555"/>
 				</mx:GridItem>
 				<mx:GridItem>
-					<mx:TextArea id="workAddress" height="60" width="100%" editable="false"/>
+					<mx:TextArea id="workAddress" height="60" width="200" editable="false"/>
 				</mx:GridItem>
 			</mx:GridRow>
 		</mx:Grid>
