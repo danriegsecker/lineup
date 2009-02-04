@@ -48,7 +48,16 @@
 				{
 					this.endDate.text += " (all day)";
 				}
-				this.location.text = (this._entry.location != null) ? this._entry.location : "(none)";
+
+				if (this._entry.location != null)
+				{
+					this.location.text = this._entry.location;
+					this.location.toolTip = this._entry.location;
+				}
+				else
+				{
+					this.location.text = "(none)";
+				}
 				
 				// Listen for main window resizes
 				var mainWindow:NativeWindow = NativeApplication.nativeApplication.openedWindows[0] as NativeWindow;
@@ -67,7 +76,6 @@
 			
 			private function doDrag(e:MouseEvent):void
 			{
-				if (!e.buttonDown) return;
 				if (arrowBox.styleName == 'detailWindow')
 				{
 					arrowBox.styleName = "detailWindowNoArrow";
@@ -157,6 +165,6 @@
 	
 	</mx:VBox>
 
-	<mx:Canvas x="25" y="0" width="325" height="80" mouseMove="doDrag(event);" alpha="0"/>
+	<mx:Canvas x="25" y="0" width="325" height="25" mouseDown="doDrag(event);" alpha="0"/>
 
 </mx:Window>

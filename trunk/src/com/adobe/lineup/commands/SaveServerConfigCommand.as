@@ -3,10 +3,11 @@ package com.adobe.lineup.commands
 	import com.adobe.air.preferences.Preference;
 	import com.adobe.cairngorm.commands.ICommand;
 	import com.adobe.cairngorm.control.CairngormEvent;
+	import com.adobe.exchange.RequestConfig;
 	import com.adobe.lineup.events.GetAppointmentsEvent;
 	import com.adobe.lineup.events.SaveServerConfigEvent;
-	import com.adobe.lineup.model.ModelLocator;
 	import com.adobe.lineup.events.StartServerMonitorEvent;
+	import com.adobe.lineup.model.ModelLocator;
 	
 	public class SaveServerConfigCommand implements ICommand
 	{
@@ -31,6 +32,14 @@ package com.adobe.lineup.commands
 			ml.serverInfo.exchangePassword = ssce.exchangePassword;
 			ml.serverInfo.useHttps = ssce.useHttps;
 			ml.serverConfigOpen = false;
+
+			var rc:RequestConfig = new RequestConfig();
+			rc.username = ml.serverInfo.exchangeUsername;
+			rc.password = ml.serverInfo.exchangePassword;
+			rc.domain = ml.serverInfo.exchangeDomain;
+			rc.server = ml.serverInfo.exchangeServer;
+			rc.secure = ml.serverInfo.useHttps;
+			ml.requestConfig = rc;
 
 			var ssme:StartServerMonitorEvent = new StartServerMonitorEvent();
 			ssme.dispatch();

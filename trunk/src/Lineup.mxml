@@ -167,7 +167,7 @@
 
 		<comps:ControlBar width="100%"/>
 		
-		<mx:Button label="Create Test Mtg" click="new CreateAppointmentEvent().dispatch()"/>
+		<!--<mx:Button label="Create Test Mtg" click="new CreateAppointmentEvent().dispatch()"/>-->
 
 	</mx:VBox>
 

@@ -81,6 +81,15 @@ package com.adobe.lineup.commands
 				var ssme:StartServerMonitorEvent = new StartServerMonitorEvent();
 				ssme.dispatch();
 
+				// Set up the request config
+				var rc:RequestConfig = new RequestConfig();
+				rc.username = ml.serverInfo.exchangeUsername;
+				rc.password = ml.serverInfo.exchangePassword;
+				rc.domain = ml.serverInfo.exchangeDomain;
+				rc.server = ml.serverInfo.exchangeServer;
+				rc.secure = ml.serverInfo.useHttps;
+				ml.requestConfig = rc;
+
 				// Get the default appointment date range.
 				var gae:GetAppointmentsEvent = new GetAppointmentsEvent();
 				gae.startDate = new Date();
